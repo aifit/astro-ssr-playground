@@ -1,0 +1,22 @@
+{
+  "name": "astro-ssr-playground",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.6.12",
+    "@astrojs/tailwind": "^6.0.2",
+    "astro": "^5.15.4"
+  },
+  "devDependencies": {
+    "@hey-api/openapi-ts": "^0.88.0",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.18"
+  }
+}

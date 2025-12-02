@@ -1,0 +1,76 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ArchivePagination from "../components/ArchivePagination.astro";
+import { minima } from "../lib/minima";
+import { getCategoryUrl } from "../lib/url";
+import ArticleCard from "../components/ArticleCard.astro";
+
+const title = "Home";
+const description = "Latest Articles from Minima CMS";
+
+// Get pagination parameters from URL
+const url = new URL(Astro.request.url);
+const page = parseInt(url.searchParams.get("page") || "1");
+const limit = 10;
+const offset = (page - 1) * limit;
+
+// Fetch categories
+const categoriesResponse = await minima.getPublicCategories();
+const categories = categoriesResponse.data?.data || [];
+
+// Fetch articles
+const response = await minima.getPublicArticles({ limit, offset });
+const articles = response.data?.data || [];
+const pagination = response.data?.pagination;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="max-w-4xl mx-auto">
+    <div
+      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
+    >
+      {
+        categories.length > 0 && (
+          <div>
+            <strong>Categories &nbsp;</strong>
+            {categories.map((cat) => (
+              <a
+                href={getCategoryUrl(cat)}
+                class="mr-2 text-blue-600 hover:underline"
+              >
+                {cat.name}
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </div>
+
+    <div class="max-w-4xl mx-auto my-4">
+      {
+        articles.length === 0 ? (
+          <p>No articles found.</p>
+        ) : (
+          <div class="grid grid-cols-2 gap-4">
+            {articles.map((article) => (
+              <ArticleCard article={article} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+  <div
+    class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mt-4 mb-4"
+  >
+    {
+      pagination && (
+        <ArchivePagination
+          pagination={pagination}
+          basePath="/"
+          itemLabel="articles"
+        />
+      )
+    }
+  </div>
+</BaseLayout>

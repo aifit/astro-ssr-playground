@@ -1,0 +1,36 @@
+---
+import type { PublicArticle } from "../sdk/types.gen";
+import ArticleAuthor from "./ArticleAuthor.astro";
+import { getArticleUrl } from "../lib/url";
+import ArticleHeroImage from "./ArticleHeroImage.astro";
+import { getImageUrl } from "../lib/image";
+
+interface Props {
+  article: PublicArticle;
+}
+
+const { article } = Astro.props;
+
+const heroImageUrl = article.heroImage
+  ? getImageUrl(article.heroImage.path)
+  : "";
+
+const excerpt = article.description || article.subHeadline || "";
+---
+
+<div>
+  {
+    article.heroImage && (
+      <ArticleHeroImage article={article} imageUrl={heroImageUrl} />
+    )
+  }
+  <h1 class="text-2xl font-medium m-0 mb-6 mt-6">
+    <a href={getArticleUrl(article)}>{article.headline}</a>
+  </h1>
+  <ArticleAuthor author={article.author} publishedAt={article.publishedAt} />
+  {
+    excerpt && (
+      <p class="text-base text-neutral-600 mb-4 line-clamp-2">{excerpt}</p>
+    )
+  }
+</div>

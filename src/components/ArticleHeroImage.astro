@@ -1,0 +1,17 @@
+---
+import type { PublicArticle } from "../sdk/types.gen";
+
+interface Props {
+  article: PublicArticle;
+  imageUrl: string;
+}
+const { article, imageUrl } = Astro.props;
+---
+
+<div>
+  <img
+    class="w-full h-auto my-0"
+    src={imageUrl}
+    alt={article.headline || article.heroImage?.caption}
+  />
+</div>

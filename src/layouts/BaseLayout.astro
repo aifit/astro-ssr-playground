@@ -1,0 +1,93 @@
+---
+import "../styles/tailwind.css";
+
+import { minima } from "../lib/minima";
+import type { PublicMenuItem } from "../sdk/types.gen";
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+
+const { data: siteData } = await minima.getPublicSite();
+const menus = siteData?.menus || [];
+const mainMenu = menus.find((menu) => menu.slug === "mainmenu");
+const secondaryMenu = menus.find((menu) => menu.slug === "secondarymenu");
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+  </head>
+  <body>
+    <nav
+      class="flex justify-center space-x-4 bg-sky-100 border-b border-sky-600 top-0 sticky shadow z-50"
+    >
+      {
+        mainMenu?.items
+          ?.sort((a, b) => a.position - b.position)
+          .map((item: PublicMenuItem) => {
+            let href = "#";
+            if (item.linkType === "external") {
+              href = item.url;
+            } else if (
+              item.linkType === "path" ||
+              item.linkType === "permalink"
+            ) {
+              href = item.path;
+            }
+
+            return (
+              <div class="p-4">
+                <a
+                  class="text-blue-700 hover:text-blue-800 hover:underline"
+                  href={href}
+                  target={item.openInNewTab ? "_blank" : "_self"}
+                >
+                  {item.label}
+                </a>
+              </div>
+            );
+          })
+      }
+    </nav>
+    <main class="p-4 flex-1">
+      <slot />
+    </main>
+    <footer
+      class="flex justify-center items-center p-4 space-x-4 bg-sky-100 border-t border-sky-600 shadow rounded rounded-b-none"
+    >
+      {
+        secondaryMenu?.items
+          ?.sort((a, b) => a.position - b.position)
+          .map((item: PublicMenuItem) => {
+            let href = "#";
+            if (item.linkType === "external") {
+              href = item.url;
+            } else if (
+              item.linkType === "path" ||
+              item.linkType === "permalink"
+            ) {
+              href = item.path;
+            }
+
+            return (
+              <a
+                class="text-blue-700 hover:text-blue-800 hover:underline"
+                href={href}
+                target={item.openInNewTab ? "_blank" : "_self"}
+              >
+                {item.label}
+              </a>
+            );
+          })
+      }
+    </footer>
+  </body>
+</html>

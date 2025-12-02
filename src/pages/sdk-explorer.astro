@@ -1,0 +1,171 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import {
+  getPublicSite,
+  getPublicArticles,
+  getPublicEntities,
+  getPublicCategories,
+  getPublicArticleBySlug,
+  getPublicEntityBySlug,
+  resolvePublicPermalink,
+} from "../sdk";
+import { client } from "../sdk/client.gen";
+
+const apiKey = import.meta.env.MINIMA_API_KEY;
+const siteId = import.meta.env.MINIMA_SITE_ID;
+
+client.setConfig({
+  headers: {
+    "X-Api-Key": apiKey,
+  },
+});
+
+// 1. Get Public Site
+const siteResponse = await getPublicSite({
+  path: { siteId },
+});
+
+// 2. Get Public Articles (Limit 1)
+const articlesResponse = await getPublicArticles({
+  path: { siteId },
+  query: { limit: 1 },
+});
+const firstArticle = articlesResponse.data?.data?.[0];
+
+// 3. Get Public Entities (Limit 1)
+const entitiesResponse = await getPublicEntities({
+  path: { siteId },
+  query: { limit: 1 },
+});
+const firstEntity = entitiesResponse.data?.data?.[0];
+
+// 4. Get Public Categories (Limit 1)
+const categoriesResponse = await getPublicCategories({
+  path: { siteId },
+  query: { limit: 1 },
+});
+
+// 5. Get Public Article By Slug (if available)
+let articleBySlugResponse = null;
+if (firstArticle?.slug) {
+  articleBySlugResponse = await getPublicArticleBySlug({
+    path: { siteId, slug: firstArticle.slug },
+  });
+}
+
+// 6. Get Public Entity By Slug (if available)
+let entityBySlugResponse = null;
+if (firstEntity?.slug) {
+  entityBySlugResponse = await getPublicEntityBySlug({
+    path: { siteId, slug: firstEntity.slug },
+  });
+}
+
+// 7. Resolve Public Permalink (if available)
+let resolvePermalinkResponse = null;
+if (firstArticle?.permalink?.path) {
+  resolvePermalinkResponse = await resolvePublicPermalink({
+    path: { siteId },
+    query: { path: firstArticle.permalink.path },
+  });
+}
+
+const results = [
+  {
+    id: "getPublicSite",
+    name: "getPublicSite",
+    data: siteResponse.data,
+    description: "Get a public site by its ID.",
+  },
+  {
+    id: "getPublicArticles",
+    name: "getPublicArticles (Limit 1)",
+    data: articlesResponse.data,
+    description: "Get public articles for a site.",
+  },
+  {
+    id: "getPublicEntities",
+    name: "getPublicEntities (Limit 1)",
+    data: entitiesResponse.data,
+    description: "Get public entities for a site.",
+  },
+  {
+    id: "getPublicCategories",
+    name: "getPublicCategories (Limit 1)",
+    data: categoriesResponse.data,
+    description: "Get all categories for a site.",
+  },
+  {
+    id: "getPublicArticleBySlug",
+    name: `getPublicArticleBySlug (${firstArticle?.slug || "N/A"})`,
+    data: articleBySlugResponse?.data,
+    description: "Get a public article by its slug.",
+  },
+  {
+    id: "getPublicEntityBySlug",
+    name: `getPublicEntityBySlug (${firstEntity?.slug || "N/A"})`,
+    data: entityBySlugResponse?.data,
+    description: "Get a public entity by its slug.",
+  },
+  {
+    id: "resolvePublicPermalink",
+    name: `resolvePublicPermalink (${firstArticle?.permalink?.path || "N/A"})`,
+    data: resolvePermalinkResponse?.data,
+    description: "Resolve a permalink path to its resource.",
+  },
+];
+---
+
+<BaseLayout title="SDK Explorer" description="Explore Minima SDK Endpoints">
+  <div class="flex gap-8">
+    <!-- Sticky Navigation -->
+    <nav class="w-64 flex-shrink-0">
+      <div class="sticky top-[72px]">
+        <h2 class="text-lg font-bold mb-4">Endpoints</h2>
+        <ul class="space-y-2">
+          {
+            results.map((item) => (
+              <li>
+                <a
+                  href={`#${item.id}`}
+                  class="block px-3 py-2 rounded hover:bg-gray-100 text-sm"
+                >
+                  {item.id}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex-1">
+      <h1 class="text-3xl font-bold mb-6">Minima SDK Explorer</h1>
+      <p class="mb-8 text-gray-600">
+        Debugging page to view raw responses from various SDK endpoints.
+      </p>
+
+      <div class="space-y-8">
+        {
+          results.map((item) => (
+            <div
+              id={item.id}
+              class="rounded-lg shadow overflow-hidden scroll-mt-20"
+            >
+              <div class="bg-white p-4 border-b">
+                <h2 class="text-xl font-medium font-mono">{item.name}</h2>
+                <p class="text-sm text-gray-500 mt-1">{item.description}</p>
+              </div>
+              <div class="p-4 bg-slate-900 overflow-x-auto">
+                <pre class="text-xs text-green-400 font-mono whitespace-pre-wrap">
+                  {JSON.stringify(item.data, null, 2)}
+                </pre>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

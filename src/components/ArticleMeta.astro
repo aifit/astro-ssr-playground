@@ -1,0 +1,52 @@
+---
+import type { PublicArticle } from "../sdk/types.gen";
+import { getCategoryUrl, getTagUrl } from "../lib/url";
+
+interface Props {
+  article: PublicArticle;
+}
+
+const { article } = Astro.props;
+---
+
+<div class="space-y-4 py-6">
+  {
+    article.categories.length > 0 && (
+      <div>
+        <p class="text-base uppercase tracking-wider text-neutral-9000 mb-2">
+          Categories
+        </p>
+        <div class="flex flex-wrap gap-2">
+          {article.categories.map((category) => (
+            <a
+              href={getCategoryUrl(category)}
+              class="inline-block text-base px-3 py-1 bg-warm-50 text-warm-700 rounded-full font-medium hover:bg-warm-100 transition-colors"
+            >
+              {category.name}
+            </a>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  {
+    article.tags.length > 0 && (
+      <div>
+        <p class="text-base uppercase tracking-wider text-neutral-9000 mb-2">
+          Tags
+        </p>
+        <div class="flex flex-wrap gap-2">
+          {article.tags.map((tag) => (
+            <a
+              href={getTagUrl(tag)}
+              class="inline-block px-3 py-1 bg-warm-50 text-warm-700 rounded-full ftext-base font-medium hover:bg-warm-100 transition-colors"
+            >
+              #{tag.name}
+            </a>
+          ))}
+        </div>
+      </div>
+    )
+  }
+</div>

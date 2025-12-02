@@ -1,0 +1,33 @@
+---
+import type { PaginationMeta } from "../sdk/types.gen";
+
+interface Props {
+  pagination: PaginationMeta;
+  basePath: string;
+  itemLabel: string;
+}
+
+const { pagination, basePath, itemLabel } = Astro.props;
+---
+
+<div>
+  <p>
+    Page {pagination.page} of {pagination.totalPages} (Total: {pagination.total}
+    {itemLabel})
+  </p>
+  <nav>
+    {
+      pagination.page > 1 && (
+        <a href={`${basePath}?page=${pagination.page - 1}`}>Previous</a>
+      )
+    }
+    {
+      pagination.page < pagination.totalPages && (
+        <>
+          {pagination.page > 1 && <span> | </span>}
+          <a href={`${basePath}?page=${pagination.page + 1}`}>Next</a>
+        </>
+      )
+    }
+  </nav>
+</div>

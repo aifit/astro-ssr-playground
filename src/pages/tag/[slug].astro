@@ -1,0 +1,104 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import ArchivePagination from "../../components/ArchivePagination.astro";
+import { minima } from "../../lib/minima";
+import { getImageUrl } from "../../lib/image";
+import { getArticleUrl, getCategoryUrl, getTagUrl } from "../../lib/url";
+
+// Get tag slug from URL params
+const { slug } = Astro.params;
+
+// Get pagination parameters from URL
+const url = new URL(Astro.request.url);
+const page = parseInt(url.searchParams.get("page") || "1");
+const limit = 10;
+const offset = (page - 1) * limit;
+
+// Fetch articles by tag
+const response = await minima.getPublicArticles({
+  limit,
+  offset,
+  tag: slug,
+});
+
+const articles = response.data?.data || [];
+const pagination = response.data?.pagination;
+
+// Get tag name from first article (if available)
+const tagName =
+  articles.length > 0 && articles[0].tags.length > 0
+    ? articles[0].tags.find((tag) => tag.slug === slug)?.name || slug
+    : slug;
+
+const title = `Tag: ${tagName}`;
+const description = `Articles tagged with ${tagName}`;
+---
+
+<BaseLayout title={title} description={description}>
+  <h1>Tag: {tagName}</h1>
+
+  {
+    articles.length === 0 ? (
+      <p>No articles found with this tag.</p>
+    ) : (
+      <ul>
+        {articles.map((article) => (
+          <li>
+            {article.heroImage && (
+              <div>
+                <img
+                  src={getImageUrl(article.heroImage.path, 240, 240)}
+                  alt={
+                    article.heroImage.attributes?.caption || article.headline
+                  }
+                  width="240"
+                  height="240"
+                />
+              </div>
+            )}
+            <h2>
+              <a href={getArticleUrl(article)}>{article.headline}</a>
+            </h2>
+            {article.description && <p>{article.description}</p>}
+            <p>
+              <small>
+                By {article.author.name} on{" "}
+                {new Date(article.publishedAt * 1000).toLocaleDateString()}
+              </small>
+            </p>
+            {article.categories.length > 0 && (
+              <p>
+                Categories:{" "}
+                {article.categories
+                  .map((cat) => <a href={getCategoryUrl(cat)}>{cat.name}</a>)
+                  .reduce((prev, curr) => [prev, ", ", curr])}
+              </p>
+            )}
+            {article.tags.length > 0 && (
+              <p>
+                Tags:{" "}
+                {article.tags
+                  .map((tag) => <a href={getTagUrl(tag)}>{tag.name}</a>)
+                  .reduce((prev, curr) => [prev, ", ", curr])}
+              </p>
+            )}
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    pagination && (
+      <ArchivePagination
+        pagination={pagination}
+        basePath={`/tag/${slug}`}
+        itemLabel="articles"
+      />
+    )
+  }
+
+  <p>
+    <a href="/">← Back to home</a>
+  </p>
+</BaseLayout>

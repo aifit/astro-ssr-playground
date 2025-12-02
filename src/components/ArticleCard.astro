@@ -1,0 +1,18 @@
+---
+import type { PublicArticle } from "../sdk/types.gen";
+import ArticleMeta from "./ArticleMeta.astro";
+import ArticleHeadline from "./ArticleHeadline.astro";
+
+interface Props {
+  article: PublicArticle;
+}
+
+const { article } = Astro.props;
+---
+
+<article class="bg-white rounded shadow border border-sky-600">
+  <div class="p-4">
+    <ArticleHeadline article={article} />
+    <ArticleMeta article={article} />
+  </div>
+</article>

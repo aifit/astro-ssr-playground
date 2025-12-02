@@ -1,0 +1,52 @@
+---
+import type { PublicUser } from "../sdk/types.gen";
+import { getImageUrl } from "../lib/image";
+
+interface Props {
+  author: PublicUser;
+  publishedAt?: number;
+}
+
+const { author, publishedAt } = Astro.props;
+
+const avatarUrl = author.avatar
+  ? getImageUrl(author.avatar.path, 120, 120)
+  : null;
+
+const authorInitial = author.name ? author.name.charAt(0).toUpperCase() : "?";
+---
+
+<div class="flex items-center gap-3 mb-4">
+  {
+    avatarUrl ? (
+      <img
+        src={avatarUrl}
+        alt={author.name || "Author"}
+        class="w-12 h-12 rounded-full object-cover m-0 border border-sky-600"
+      />
+    ) : (
+      <div class="w-12 h-12 rounded-full bg-warm-100 flex items-center justify-center border border-sky-600">
+        <span class="text-warm-700 font-medium text-lg">{authorInitial}</span>
+      </div>
+    )
+  }
+  <div class="flex flex-col">
+    <span class="font-medium text-neutral-900">
+      {author.name || "Unknown Author"}
+    </span>
+    {
+      publishedAt && (
+        <time
+          class="text-sm text-neutral-9000"
+          datetime={new Date(publishedAt * 1000).toISOString()}
+        >
+          {new Date(publishedAt * 1000).toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}
+        </time>
+      )
+    }
+  </div>
+</div>
