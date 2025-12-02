@@ -10,11 +10,15 @@ const description = "Latest Articles from Minima CMS";
 
 // Fetch articles (limit to 3 for homepage)
 const response = await minima.getPublicArticles();
+console.log("Articles response:", response);
 const articles = response.data?.data || [];
+console.log("Articles count:", articles.length);
 
 // Fetch projects (limit to 4 for homepage)
 const projectsResponse = await minima.getPublicEntities({ limit: 4 });
+console.log("Projects response:", projectsResponse);
 const projects = projectsResponse.data?.data || [];
+console.log("Projects count:", projects.length);
 ---
 
 <BaseLayout title={title} description={description}>
