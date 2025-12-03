@@ -47,19 +47,19 @@ const pagination = response.data?.pagination;
       }
     </div>
 
-    <div class="max-w-4xl mx-auto my-4">
-      {
-        articles.length === 0 ? (
-          <p>No articles found.</p>
-        ) : (
+    {
+      articles.length === 0 ? (
+        <p>No articles found.</p>
+      ) : (
+        <div class="max-w-4xl mx-auto my-4">
           <div class="grid grid-cols-2 gap-4">
             {articles.map((article) => (
               <ArticleCard article={article} />
             ))}
           </div>
-        )
-      }
-    </div>
+        </div>
+      )
+    }
   </div>
   <div
     class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mt-4 mb-4"
