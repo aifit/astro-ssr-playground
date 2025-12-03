@@ -4,9 +4,10 @@ import ArchivePagination from "../components/ArchivePagination.astro";
 import { minima } from "../lib/minima";
 import { getCategoryUrl } from "../lib/url";
 import ArticleCard from "../components/ArticleCard.astro";
+import { buildTitle } from "../config/site";
 
-const title = "Home";
-const description = "Latest Articles from Minima CMS";
+const title = await buildTitle("Articles");
+const description = "Latest Articles";
 
 // Get pagination parameters from URL
 const url = new URL(Astro.request.url);

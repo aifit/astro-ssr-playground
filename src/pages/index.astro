@@ -1,12 +1,11 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { minima } from "../lib/minima";
-import { getImageUrl } from "../lib/image";
-import { getArticleUrl, getCategoryUrl, getTagUrl } from "../lib/url";
 import ArticleCard from "../components/ArticleCard.astro";
+import { getSiteName } from "../config/site";
 
-const title = "Home";
-const description = "Latest Articles from Minima CMS";
+const title = await getSiteName();
+const description = "Latest Articles & Projects";
 
 // Fetch articles (limit to 3 for homepage)
 const response = await minima.getPublicArticles();

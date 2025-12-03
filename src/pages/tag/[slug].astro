@@ -4,6 +4,7 @@ import ArchivePagination from "../../components/ArchivePagination.astro";
 import { minima } from "../../lib/minima";
 import { getImageUrl } from "../../lib/image";
 import { getArticleUrl, getCategoryUrl, getTagUrl } from "../../lib/url";
+import { buildTitle } from "../../config/site";
 
 // Get tag slug from URL params
 const { slug } = Astro.params;
@@ -30,7 +31,7 @@ const tagName =
     ? articles[0].tags.find((tag) => tag.slug === slug)?.name || slug
     : slug;
 
-const title = `Tag: ${tagName}`;
+const title = await buildTitle(tagName);
 const description = `Articles tagged with ${tagName}`;
 ---
 

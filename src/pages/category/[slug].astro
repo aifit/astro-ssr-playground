@@ -4,6 +4,7 @@ import ArchivePagination from "../../components/ArchivePagination.astro";
 import { minima } from "../../lib/minima";
 import { getImageUrl } from "../../lib/image";
 import { getArticleUrl, getCategoryUrl, getTagUrl } from "../../lib/url";
+import { buildTitle } from "../../config/site";
 
 // Get category slug from URL params
 const { slug } = Astro.params;
@@ -30,7 +31,7 @@ const categoryName =
     ? articles[0].categories.find((cat) => cat.slug === slug)?.name || slug
     : slug;
 
-const title = `Category: ${categoryName}`;
+const title = await buildTitle(categoryName);
 const description = `Articles in ${categoryName} category`;
 ---
 
