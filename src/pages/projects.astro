@@ -69,42 +69,56 @@ const description = "Latest Projects";
 
 <BaseLayout title={title} description={description}>
   <div class="max-w-4xl mx-auto">
+    <h1 class="text-3xl font-medium m-0 mb-4 text-center">All Projects</h1>
     <div
       class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
     >
       {
         categories.length > 0 && (
-          <div class="mb-3">
-            <strong>Categories &nbsp;</strong>
-            <a href="/projects" class="mr-2 text-blue-600 hover:underline">
-              All
-            </a>
-            {categories.map((cat) => (
-              <a
-                href={`/projects?category=${cat}`}
-                class="mr-2 text-blue-600 hover:underline"
-              >
-                {cat}
+          <div class="flex">
+            <div class="shrink-0 w-32">
+              <strong>Categories &nbsp;</strong>
+            </div>
+            <div>
+              <a href="/projects" class="mr-2 text-blue-600 hover:underline">
+                All
               </a>
-            ))}
+              {categories.map((cat) => (
+                <a
+                  href={`/projects?category=${cat}`}
+                  class="mr-2 text-blue-600 hover:underline"
+                >
+                  {cat}
+                </a>
+              ))}
+            </div>
           </div>
         )
       }
+    </div>
+
+    <div
+      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
+    >
       {
         years.length > 0 && (
-          <div>
-            <strong>Year &nbsp;</strong>
-            <a href="/projects" class="mr-2 text-blue-600 hover:underline">
-              All
-            </a>
-            {years.map((year) => (
-              <a
-                href={`/projects?year=${year}`}
-                class="mr-2 text-blue-600 hover:underline"
-              >
-                {year}
+          <div class="flex">
+            <div class="shrink-0 w-32">
+              <strong>All Years &nbsp;</strong>
+            </div>
+            <div>
+              <a href="/projects" class="mr-2 text-blue-600 hover:underline">
+                All
               </a>
-            ))}
+              {years.map((year) => (
+                <a
+                  href={`/projects?year=${year}`}
+                  class="mr-2 text-blue-600 hover:underline"
+                >
+                  {year}
+                </a>
+              ))}
+            </div>
           </div>
         )
       }
@@ -158,7 +172,7 @@ const description = "Latest Projects";
     </div>
   </div>
   <div
-    class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mt-4 mb-4"
+    class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mt-4"
   >
     {
       pagination && (
