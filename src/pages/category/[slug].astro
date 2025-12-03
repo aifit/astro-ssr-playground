@@ -64,7 +64,9 @@ const description = `Articles in ${categoryName} category`;
         <p>No articles found in this category.</p>
       ) : (
         <div class="max-w-4xl mx-auto my-4">
-          <h1 class="text-2xl font-medium m-0 mb-4">{categoryName}</h1>
+          <h1 class="text-2xl font-medium m-0 mb-4">
+            Category: {categoryName}
+          </h1>
           <div class="grid grid-cols-2 gap-4">
             {articles.map((article) => (
               <ArticleCard article={article} />
