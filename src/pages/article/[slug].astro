@@ -6,6 +6,7 @@ import { renderTiptapContent } from "../../lib/editor";
 import ArticleHeadline from "../../components/ArticleHeadline.astro";
 import ArticlePagination from "../../components/ArticlePagination.astro";
 import ArticleMeta from "../../components/ArticleMeta.astro";
+import { buildTitle } from "../../config/site";
 
 // Get slug from URL params
 const { slug } = Astro.params;
@@ -18,7 +19,7 @@ if (!article) {
   return Astro.redirect("/404");
 }
 
-const title = article.headline;
+const title = await buildTitle(article.headline);
 const description = article.description || "";
 ---
 

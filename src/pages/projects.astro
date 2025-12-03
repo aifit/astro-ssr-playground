@@ -2,9 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ArchivePagination from "../components/ArchivePagination.astro";
 import { minima } from "../lib/minima";
-
-const title = "Projects";
-const description = "Latest Projects";
+import { buildTitle } from "../config/site";
 
 const url = new URL(Astro.request.url);
 const categoryFilter = url.searchParams.get("category") || undefined;
@@ -59,6 +57,14 @@ if (categoryFilter) {
 if (yearFilter) {
   basePath += `${categoryFilter ? "&" : "?"}year=${yearFilter}`;
 }
+
+// Build dynamic title
+let titleParts = [];
+if (categoryFilter) titleParts.push(categoryFilter);
+if (yearFilter) titleParts.push(yearFilter);
+titleParts.push("Projects");
+const title = await buildTitle(titleParts.join(" "));
+const description = "Latest Projects";
 ---
 
 <BaseLayout title={title} description={description}>

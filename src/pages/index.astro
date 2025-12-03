@@ -1,15 +1,15 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { minima } from "../lib/minima";
-import { getImageUrl } from "../lib/image";
-import { getArticleUrl, getCategoryUrl, getTagUrl } from "../lib/url";
 import ArticleCard from "../components/ArticleCard.astro";
+import { getSiteName } from "../config/site";
 
-const title = "Home";
-const description = "Latest Articles from Minima CMS";
+const title = await getSiteName();
+const description =
+  "This is a small playground for exploring Astro with Server Side Rendering using Minima CMS.";
 
-// Fetch articles (limit to 3 for homepage)
-const response = await minima.getPublicArticles();
+// Fetch articles (limit to 4 for homepage)
+const response = await minima.getPublicArticles({ limit: 4 });
 const articles = response.data?.data || [];
 
 // Fetch projects (limit to 4 for homepage)
@@ -21,11 +21,8 @@ const projects = projectsResponse.data?.data || [];
   <div
     class="max-w-4xl mx-auto p-10 flex flex-col items-center justify-center bg-white shadow border rounded border-sky-600 mb-4 text-center"
   >
-    <h1 class="text-3xl font-medium mb-2">Code, Create, Share</h1>
-    <p class="text-lg text-gray-600">
-      Sharing insights, projects, and lessons learned from building digital
-      solutions.
-    </p>
+    <h1 class="text-3xl font-medium mb-2">{title}</h1>
+    <p class="text-lg text-gray-600">{description}</p>
   </div>
   <div class="max-w-4xl mx-auto my-4">
     <h1 class="mb-4 text-2xl">Latest Articles</h1>

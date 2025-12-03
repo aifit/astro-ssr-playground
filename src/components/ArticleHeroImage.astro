@@ -13,5 +13,8 @@ const { article, imageUrl } = Astro.props;
     class="w-full h-auto my-0"
     src={imageUrl}
     alt={article.headline || article.heroImage?.caption}
+    loading="lazy"
+    width={article.heroImage?.width}
+    height={article.heroImage?.height}
   />
 </div>
