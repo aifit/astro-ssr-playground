@@ -8,7 +8,7 @@ This repository is a small playground for exploring Astro with Tailwind CSS. Not
 
 ## Live Demo
 
-[![Coming Soon]](#)
+[Live Demo](https://astro-ssr-playground.pages.dev/)
 
 ## Stack
 
