@@ -12,7 +12,7 @@ const description = "Latest Articles";
 // Get pagination parameters from URL
 const url = new URL(Astro.request.url);
 const page = parseInt(url.searchParams.get("page") || "1");
-const limit = 10;
+const limit = 4;
 const offset = (page - 1) * limit;
 
 // Fetch categories
