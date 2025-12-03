@@ -2,6 +2,8 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { minima } from "../lib/minima";
 import { renderTiptapContent } from "../lib/editor";
+import { buildTitle } from "../config/site";
+import type { PageResponse } from "../sdk/types.gen";
 
 const { slug } = Astro.params;
 const path = `/${slug}`;
@@ -15,18 +17,21 @@ if (data.meta.resourceType !== "page") {
   return Astro.redirect("/404");
 }
 
-const { page: pageData } = data as any;
+const { page } = data as PageResponse;
+
+const title = await buildTitle(page.headline);
+const description = ""; // there is no description field in the API response
 ---
 
-<BaseLayout title={pageData.headline} description={pageData.headline}>
+<BaseLayout title={title} description={description}>
   <article>
     <main
       class="bg-white max-w-4xl mx-auto p-6 rounded shadow border border-sky-600"
     >
       <header>
-        <h1 class="text-4xl font-bold m-0 mb-6">{pageData.headline}</h1>
+        <h1 class="text-4xl font-bold m-0 mb-6">{page.headline}</h1>
       </header>
-      <div set:html={renderTiptapContent(pageData.body, [])} />
+      <div set:html={renderTiptapContent(page.body, [])} />
     </main>
   </article>
 </BaseLayout>
