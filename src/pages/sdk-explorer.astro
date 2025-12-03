@@ -10,6 +10,7 @@ import {
   resolvePublicPermalink,
 } from "../sdk";
 import { client } from "../sdk/client.gen";
+import { buildTitle } from "../config/site";
 
 const apiKey = import.meta.env.PUBLIC_MINIMA_API_KEY;
 const siteId = import.meta.env.PUBLIC_MINIMA_SITE_ID;
@@ -114,9 +115,12 @@ const results = [
     description: "Resolve a permalink path to its resource.",
   },
 ];
+
+const title = await buildTitle("SDK Explorer");
+const description = "Explore Minima SDK Endpoints";
 ---
 
-<BaseLayout title="SDK Explorer" description="Explore Minima SDK Endpoints">
+<BaseLayout title={title} description={description}>
   <div class="flex gap-8">
     <!-- Sticky Navigation -->
     <nav class="w-64 flex-shrink-0">
