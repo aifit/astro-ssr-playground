@@ -49,50 +49,42 @@ const description = `Articles tagged with ${tagName}`;
 
 <BaseLayout title={title} description={description}>
   <div class="max-w-4xl mx-auto">
-    <div
-      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
-    >
-      {
-        tags.length > 0 && (
-          <div>
-            <strong>Tags &nbsp;</strong>
-            {tags.map((tag) => (
-              <a
-                href={getTagUrl(tag)}
-                class="mr-2 text-blue-600 hover:underline"
-              >
-                {tag.name}
-              </a>
-            ))}
-          </div>
-        )
-      }
-    </div>
     {
       articles.length === 0 ? (
         <p>No articles found in this tag.</p>
       ) : (
-        <div class="max-w-4xl mx-auto my-4">
-          <h1 class="text-2xl font-medium m-0 mb-4">Tag: {tagName}</h1>
-          <div class="grid grid-cols-2 gap-4">
-            {articles.map((article) => (
-              <ArticleCard article={article} />
-            ))}
-          </div>
+        <h1 class="text-3xl font-medium m-0 mb-4 text-center">Tag: {tagName}</h1>
+        <div class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4">
+          {tags.length > 0 && (
+            <div>
+              <strong>Tags &nbsp;</strong>
+              {tags.map((tag) => (
+                <a
+                  href={getTagUrl(tag)}
+                  class="mr-2 text-blue-600 hover:underline"
+                >
+                  {tag.name}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          {articles.map((article) => (
+            <ArticleCard article={article} />
+          ))}
         </div>
       )
     }
   </div>
   {
     pagination && (
-      <div class="max-w-4xl mx-auto">
-        <div class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4">
-          <ArchivePagination
-            pagination={pagination}
-            basePath={`/tag/${slug}`}
-            itemLabel="articles"
-          />
-        </div>
+      <div class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mt-4">
+        <ArchivePagination
+          pagination={pagination}
+          basePath={`/tag/${slug}`}
+          itemLabel="articles"
+        />
       </div>
     )
   }
