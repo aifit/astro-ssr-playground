@@ -50,11 +50,7 @@ const description = `Articles in ${categoryName} category`;
           </h1>
 
           {categories.length > 0 && (
-            <Taxonomy
-              variant="category"
-              label="All Categories"
-              items={categories}
-            />
+            <Taxonomy label="All Categories" items={categories} />
           )}
           <div class="grid grid-cols-2 gap-4">
             {articles.map((article) => (

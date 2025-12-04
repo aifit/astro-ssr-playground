@@ -31,11 +31,7 @@ const pagination = response.data?.pagination;
 
     {
       categories.length > 0 && (
-        <Taxonomy
-          variant="category"
-          label="All Categories"
-          items={categories}
-        />
+        <Taxonomy label="All Categories" items={categories} />
       )
     }
 
