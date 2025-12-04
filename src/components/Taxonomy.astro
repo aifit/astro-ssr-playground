@@ -1,9 +1,7 @@
 ---
 import { getTagUrl, getCategoryUrl } from "../lib/url";
 import type { PublicTag, PublicSiteCategory } from "../sdk";
-
-const VARIANT_TAG = "tag" as const;
-const VARIANT_CATEGORY = "category" as const;
+import { VARIANT_TAG, VARIANT_CATEGORY } from "../lib/constants";
 
 // Props with variant for tag or category
 type Props =

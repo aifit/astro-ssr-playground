@@ -1,3 +1,5 @@
+import { CDN_BASE_URL } from "./constants";
+
 /**
  Options for image resizing via CDN
  */
@@ -25,7 +27,7 @@ export function getImageUrl(
   }
 
   // Construct base CDN URL
-  const baseUrl = `https://r2.minima.ltd/${path}`;
+  const baseUrl = `${CDN_BASE_URL}/${path}`;
 
   // Add resize parameters if provided
   if (width || height) {
