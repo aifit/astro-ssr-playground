@@ -22,7 +22,10 @@ if (!project) {
   return Astro.redirect("/404");
 }
 
-const articleResponse = await minima.getPublicArticles({ limit: 100 });
+// Fetch all articles without limit since:
+// 1. The API doesn't support filtering by entity/project
+// 2. Total article count is small (< 10)
+const articleResponse = await minima.getPublicArticles();
 const allArticles = articleResponse.data?.data || [];
 
 const title = await buildTitle(project.name);
