@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ArchivePagination from "../components/ArchivePagination.astro";
 import { minima } from "../lib/minima";
 import { buildTitle } from "../config/site";
-import HeroImage from "../components/HeroImage.astro";
+import ProjectCard from "../components/ProjectCard.astro";
 
 const url = new URL(Astro.request.url);
 const page = parseInt(url.searchParams.get("page") || "1");
@@ -41,34 +41,8 @@ const description = "Latest Projects";
           <p>No projects found.</p>
         ) : (
           <div class="grid grid-cols-2 gap-4">
-            {projects.map((project: any) => (
-              <article class="bg-white rounded shadow border border-sky-600">
-                {project.heroImage && (
-                  <a href={`/project/${project.slug}`}>
-                    <HeroImage image={project.heroImage} alt={project.name} />
-                  </a>
-                )}
-                <div class="p-4">
-                  <h2 class="text-2xl font-medium m-0 mb-2">
-                    <a href={`/project/${project.slug}`}>{project.name}</a>
-                  </h2>
-                  {project.attributes?.category && (
-                    <p class="text-base text-gray-500 mb-2">
-                      {project.attributes.category}
-                    </p>
-                  )}
-                  {project.attributes?.description && (
-                    <p class="text-gray-600 mb-2">
-                      {project.attributes.description}
-                    </p>
-                  )}
-                  {project.attributes?.techStack && (
-                    <p class="text-base text-gray-500 mb-2 border-t pt-2">
-                      {project.attributes.techStack}
-                    </p>
-                  )}
-                </div>
-              </article>
+            {projects.map((project) => (
+              <ProjectCard project={project} />
             ))}
           </div>
         )

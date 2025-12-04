@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { minima } from "../lib/minima";
 import ArticleCard from "../components/ArticleCard.astro";
+import ProjectCard from "../components/ProjectCard.astro";
 import { getSiteName } from "../config/site";
 
 const title = await getSiteName();
@@ -9,11 +10,11 @@ const description =
   "This is a small playground for exploring Astro with Server Side Rendering using Minima CMS.";
 
 // Fetch articles (limit to 4 for homepage)
-const response = await minima.getPublicArticles({ limit: 4 });
+const response = await minima.getPublicArticles({ limit: 2 });
 const articles = response.data?.data || [];
 
 // Fetch projects (limit to 4 for homepage)
-const projectsResponse = await minima.getPublicEntities({ limit: 4 });
+const projectsResponse = await minima.getPublicEntities({ limit: 2 });
 const projects = projectsResponse.data?.data || [];
 ---
 
@@ -38,6 +39,14 @@ const projects = projectsResponse.data?.data || [];
         </div>
       )
     }
+    <div class="text-center mt-6 mb-10">
+      <a
+        href="/articles"
+        class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+      >
+        View All Articles →
+      </a>
+    </div>
   </div>
 
   <div class="max-w-4xl mx-auto my-4">
@@ -47,32 +56,19 @@ const projects = projectsResponse.data?.data || [];
         <p>No projects found.</p>
       ) : (
         <div class="grid grid-cols-2 gap-4">
-          {projects.map((project: any) => (
-            <article class="bg-white rounded shadow border border-sky-600">
-              <div class="p-4">
-                <h2 class="text-2xl font-medium m-0 mb-2">
-                  <a href={`/project/${project.slug}`}>{project.name}</a>
-                </h2>
-                {project.attributes?.description && (
-                  <p class="text-gray-600 mb-2">
-                    {project.attributes.description}
-                  </p>
-                )}
-                {project.attributes?.techStack && (
-                  <p class="text-sm text-gray-500 mb-2">
-                    <strong>Tech:</strong> {project.attributes.techStack}
-                  </p>
-                )}
-                {project.attributes?.year && (
-                  <p class="text-sm text-gray-500">
-                    <strong>Year:</strong> {project.attributes.year}
-                  </p>
-                )}
-              </div>
-            </article>
+          {projects.map((project) => (
+            <ProjectCard project={project} />
           ))}
         </div>
       )
     }
+    <div class="text-center mt-6">
+      <a
+        href="/projects"
+        class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+      >
+        View All Projects →
+      </a>
+    </div>
   </div>
 </BaseLayout>
