@@ -44,7 +44,9 @@ const description = "Latest Projects";
             {projects.map((project: any) => (
               <article class="bg-white rounded shadow border border-sky-600">
                 {project.heroImage && (
-                  <HeroImage image={project.heroImage} alt={project.name} />
+                  <a href={`/project/${project.slug}`}>
+                    <HeroImage image={project.heroImage} alt={project.name} />
+                  </a>
                 )}
                 <div class="p-4">
                   <h2 class="text-2xl font-medium m-0 mb-2">

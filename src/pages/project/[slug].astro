@@ -1,12 +1,17 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { minima } from "../../lib/minima";
-import type { PublicArticle, PublicEntity } from "../../sdk/types.gen";
+import type {
+  PublicArticle,
+  PublicEntity,
+  PublicImage,
+} from "../../sdk/types.gen";
 import { buildTitle } from "../../config/site";
-import { formatDate } from "../../lib/date";
+import HeroImage from "../../components/HeroImage.astro";
 
 type EntityWithAttributes = PublicEntity & {
   attributes?: Record<string, any>;
+  heroImage?: PublicImage;
 };
 
 const { slug } = Astro.params;
@@ -18,8 +23,8 @@ if (!project) {
   return Astro.redirect("/404");
 }
 
-const articlesResponse = await minima.getPublicArticles({ limit: 100 });
-const allArticles = articlesResponse.data?.data || [];
+const articleResponse = await minima.getPublicArticles({ limit: 100 });
+const allArticles = articleResponse.data?.data || [];
 
 const relatedArticles: Array<{
   article: PublicArticle;
@@ -69,53 +74,82 @@ const description = (project as any).attributes?.description || "";
     <main
       class="bg-white max-w-4xl mx-auto p-6 rounded shadow border border-sky-600"
     >
-      <h1 class="text-4xl font-bold m-0 mb-6">{project.name}</h1>
-
-      <p class="text-sm text-gray-500 mb-4">
-        <time
-          class="text-sm text-neutral-9000"
-          datetime={formatDate(project.publishedAt)}
-        >
-          {formatDate(project.publishedAt)}
-        </time>
-      </p>
+      {
+        project.heroImage && (
+          <div class="mb-6">
+            <HeroImage image={project.heroImage} alt={project.name} />
+          </div>
+        )
+      }
+      <h1 class="text-2xl font-medium m-0 mb-6">
+        <a href={`/project/${project.slug}`}>{project.name}</a>
+      </h1>
 
       {
-        project.externalUrl && (
-          <div class="mb-6">
-            <a
-              href={project.externalUrl}
-              target="_blank"
-              rel="noopener"
-              class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-            >
-              View Live Project →
-            </a>
+        project.attributes?.description && (
+          <div>
+            <p>{project.attributes.description}</p>
           </div>
         )
       }
 
-      {
-        project.attributes && Object.keys(project.attributes).length > 0 && (
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold mb-4">Properties</h2>
-            <dl class="space-y-2">
-              {Object.entries(project.attributes).map(
-                ([key, value]: [string, any]) => (
-                  <>
-                    <dt class="font-medium text-gray-700">{key}:</dt>
-                    <dd class="text-gray-600 ml-4 mb-3">
-                      {typeof value === "object"
-                        ? JSON.stringify(value, null, 2)
-                        : String(value)}
-                    </dd>
-                  </>
-                )
-              )}
-            </dl>
-          </div>
-        )
-      }
+      <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+        {
+          project.externalUrl && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Live URL</div>
+              <p class="text-gray-600">{project.externalUrl}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.category && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Category</div>
+              <p class="text-gray-600">{project.attributes.category}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.techStack && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Tech Stack</div>
+              <p class="text-gray-600">{project.attributes.techStack}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.launchDate && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Launch Date</div>
+              <p class="text-gray-600">{project.attributes.launchDate}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.projectDuration && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">
+                Project Duration
+              </div>
+              <p class="text-gray-600">{project.attributes.projectDuration}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.client && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Client</div>
+              <p class="text-gray-600">{project.attributes.client}</p>
+            </div>
+          )
+        }
+      </div>
 
       {
         relatedArticles.length > 0 && (

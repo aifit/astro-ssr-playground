@@ -16,7 +16,9 @@ const excerpt = article.description || article.subHeadline || "";
 <div>
   {
     article.heroImage && (
-      <HeroImage image={article.heroImage} alt={article.headline} />
+      <a href={getArticleUrl(article)}>
+        <HeroImage image={article.heroImage} alt={article.headline} />
+      </a>
     )
   }
   <h1 class="text-2xl font-medium m-0 mb-6 mt-6">

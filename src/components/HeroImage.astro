@@ -11,7 +11,7 @@ const { image, alt } = Astro.props;
 const src = getImageUrl(image.path);
 ---
 
-<figure>
+<figure class="mb-0">
   <img
     src={src}
     alt={alt || image.caption || "Hero image"}
