@@ -8,7 +8,7 @@ import type {
 } from "../../sdk/types.gen";
 import { buildTitle } from "../../config/site";
 import HeroImage from "../../components/HeroImage.astro";
-import { formatDate } from "../../lib/date";
+import ProjectRelationships from "../../components/ProjectRelationships.astro";
 
 type EntityWithAttributes = PublicEntity & {
   attributes?: Record<string, any>;
@@ -27,45 +27,6 @@ if (!project) {
 
 const articleResponse = await minima.getPublicArticles({ limit: 100 });
 const allArticles = articleResponse.data?.data || [];
-
-const relatedArticles: Array<{
-  article: PublicArticle;
-  relationshipType: string;
-}> = [];
-
-for (const article of allArticles) {
-  const rels = article.relationships;
-
-  if (rels.itemReviewed && Array.isArray(rels.itemReviewed)) {
-    for (const rel of rels.itemReviewed) {
-      const entities = Array.isArray(rel.entity) ? rel.entity : [rel.entity];
-      if (entities.some((e) => e.id === project.id)) {
-        relatedArticles.push({ article, relationshipType: "Review" });
-        break;
-      }
-    }
-  }
-
-  if (rels.about && Array.isArray(rels.about)) {
-    for (const rel of rels.about) {
-      const entities = Array.isArray(rel.entity) ? rel.entity : [rel.entity];
-      if (entities.some((e) => e.id === project.id)) {
-        relatedArticles.push({ article, relationshipType: "About" });
-        break;
-      }
-    }
-  }
-
-  if (rels.mentions && Array.isArray(rels.mentions)) {
-    for (const rel of rels.mentions) {
-      const entities = Array.isArray(rel.entity) ? rel.entity : [rel.entity];
-      if (entities.some((e) => e.id === project.id)) {
-        relatedArticles.push({ article, relationshipType: "Mentions" });
-        break;
-      }
-    }
-  }
-}
 
 const title = await buildTitle(project.name);
 const description = (project as any).attributes?.description || "";
@@ -180,39 +141,7 @@ const description = (project as any).attributes?.description || "";
         }
       </div>
 
-      {
-        relatedArticles.length > 0 && (
-          <div class="mt-4 pt-3 border-t border-gray-300">
-            <h2 class="text-xl font-medium m-0 mb-6">
-              Related Articles ({relatedArticles.length})
-            </h2>
-            <div class="space-y-4">
-              {relatedArticles.map(({ article, relationshipType }) => (
-                <div class="border-l-2 border-blue-600 pl-4">
-                  <h4 class="font-medium">
-                    <a
-                      href={`/article/${article.slug}`}
-                      class="text-blue-600 hover:underline"
-                    >
-                      {article.headline}
-                    </a>
-                  </h4>
-                  <p class="text-sm text-gray-500 mb-2">
-                    <strong>Relationship:</strong> {relationshipType}
-                  </p>
-                  {article.description && (
-                    <p class="text-gray-600 mb-2">{article.description}</p>
-                  )}
-                  <p class="text-sm text-gray-500">
-                    By {article.author.name} on{" "}
-                    {formatDate(article.publishedAt)}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )
-      }
+      <ProjectRelationships project={project} articles={allArticles} />
     </main>
   </article>
 </BaseLayout>
