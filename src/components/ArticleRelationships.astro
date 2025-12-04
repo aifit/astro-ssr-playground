@@ -3,6 +3,7 @@ import type {
   PublicArticleRelationships,
   PublicEntity,
 } from "../sdk/types.gen";
+import { getProjectUrl } from "../lib/url";
 
 interface Props {
   relationships: PublicArticleRelationships;
@@ -72,7 +73,7 @@ if (relationships?.mentions) {
           <div>
             <h2 class="text-2xl font-medium m-0 mb-2">
               <a
-                href={`/project/${project.slug}`}
+                href={getProjectUrl(project)}
                 class="text-blue-600 hover:underline"
               >
                 {project.name}
@@ -106,7 +107,7 @@ if (relationships?.mentions) {
           <div>
             <h2 class="text-2xl font-medium m-0 mb-2">
               <a
-                href={`/project/${project.slug}`}
+                href={getProjectUrl(project)}
                 class="text-blue-600 hover:underline"
               >
                 {project.name}
@@ -140,7 +141,7 @@ if (relationships?.mentions) {
           <div>
             <h2 class="text-2xl font-medium m-0 mb-2">
               <a
-                href={`/project/${project.slug}`}
+                href={getProjectUrl(project)}
                 class="text-blue-600 hover:underline"
               >
                 {project.name}

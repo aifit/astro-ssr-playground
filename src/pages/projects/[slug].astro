@@ -1,14 +1,11 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { minima } from "../../lib/minima";
-import type {
-  PublicArticle,
-  PublicEntity,
-  PublicImage,
-} from "../../sdk/types.gen";
+import type { PublicEntity, PublicImage } from "../../sdk/types.gen";
 import { buildTitle } from "../../config/site";
 import HeroImage from "../../components/HeroImage.astro";
 import ProjectRelationships from "../../components/ProjectRelationships.astro";
+import { getProjectUrl } from "../../lib/url";
 
 type EntityWithAttributes = PublicEntity & {
   attributes?: Record<string, any>;
@@ -54,7 +51,7 @@ const description = (project as any).attributes?.description || "";
         )
       }
       <h1 class="text-2xl font-medium m-0 mb-6">
-        <a href={`/project/${project.slug}`}>{project.name}</a>
+        <a href={getProjectUrl(project)}>{project.name}</a>
       </h1>
 
       {
