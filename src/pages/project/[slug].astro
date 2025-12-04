@@ -3,6 +3,7 @@ import BaseLayout from "../../layouts/BaseLayout.astro";
 import { minima } from "../../lib/minima";
 import type { PublicArticle, PublicEntity } from "../../sdk/types.gen";
 import { buildTitle } from "../../config/site";
+import { formatDate } from "../../lib/date";
 
 type EntityWithAttributes = PublicEntity & {
   attributes?: Record<string, any>;
@@ -71,7 +72,12 @@ const description = (project as any).attributes?.description || "";
       <h1 class="text-4xl font-bold m-0 mb-6">{project.name}</h1>
 
       <p class="text-sm text-gray-500 mb-4">
-        Published: {new Date(project.publishedAt * 1000).toLocaleDateString()}
+        <time
+          class="text-sm text-neutral-9000"
+          datetime={formatDate(project.publishedAt)}
+        >
+          {formatDate(project.publishedAt)}
+        </time>
       </p>
 
       {

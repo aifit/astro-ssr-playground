@@ -5,132 +5,41 @@ import { minima } from "../lib/minima";
 import { buildTitle } from "../config/site";
 
 const url = new URL(Astro.request.url);
-const categoryFilter = url.searchParams.get("category") || undefined;
-const yearFilter = url.searchParams.get("year") || undefined;
+const page = parseInt(url.searchParams.get("page") || "1");
+const limit = 6;
+const offset = (page - 1) * limit;
 
-const response = await minima.getPublicEntities({ limit: 100 });
+// Fetch all projects
+const response = await minima.getPublicEntities();
 const allProjects = response.data?.data || [];
 
-const categories = [
-  ...new Set(
-    allProjects?.map((p: any) => p.attributes?.category).filter(Boolean) || []
-  ),
-];
-
-const years = [
-  ...new Set(
-    allProjects?.map((p: any) => p.attributes?.year).filter(Boolean) || []
-  ),
-].sort((a, b) => b - a);
-
-let filteredProjects = allProjects;
-
-if (categoryFilter) {
-  filteredProjects = filteredProjects.filter(
-    (p: any) => p.attributes?.category === categoryFilter
-  );
-}
-
-if (yearFilter) {
-  filteredProjects = filteredProjects.filter(
-    (p: any) => p.attributes?.year?.toString() === yearFilter
-  );
-}
-
-const page = parseInt(url.searchParams.get("page") || "1");
-const limit = 4;
-const offset = (page - 1) * limit;
-const paginatedProjects = filteredProjects.slice(offset, offset + limit);
+// Paginate
+const paginatedProjects = allProjects.slice(offset, offset + limit);
 
 const pagination = {
-  total: filteredProjects.length,
+  total: allProjects.length,
   limit,
   offset,
   page,
-  totalPages: Math.ceil(filteredProjects.length / limit),
+  totalPages: Math.ceil(allProjects.length / limit),
 };
 
-let basePath = "/projects";
-if (categoryFilter) {
-  basePath += `?category=${categoryFilter}`;
-}
-if (yearFilter) {
-  basePath += `${categoryFilter ? "&" : "?"}year=${yearFilter}`;
-}
+const projects = paginatedProjects;
 
-// Build dynamic title
-let titleParts = [];
-if (categoryFilter) titleParts.push(categoryFilter);
-if (yearFilter) titleParts.push(yearFilter);
-titleParts.push("Projects");
-const title = await buildTitle(titleParts.join(" "));
+const title = await buildTitle("Projects");
 const description = "Latest Projects";
 ---
 
 <BaseLayout title={title} description={description}>
   <div class="max-w-4xl mx-auto">
     <h1 class="text-3xl font-medium m-0 mb-4 text-center">All Projects</h1>
-    <div
-      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
-    >
-      {
-        categories.length > 0 && (
-          <div class="flex">
-            <div class="shrink-0 w-24">
-              <strong>Categories &nbsp;</strong>
-            </div>
-            <div>
-              <a href="/projects" class="mr-2 text-blue-600 hover:underline">
-                All
-              </a>
-              {categories.map((cat) => (
-                <a
-                  href={`/projects?category=${cat}`}
-                  class="mr-2 text-blue-600 hover:underline"
-                >
-                  {cat}
-                </a>
-              ))}
-            </div>
-          </div>
-        )
-      }
-    </div>
-
-    <div
-      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
-    >
-      {
-        years.length > 0 && (
-          <div class="flex">
-            <div class="shrink-0 w-24">
-              <strong>Years &nbsp;</strong>
-            </div>
-            <div>
-              <a href="/projects" class="mr-2 text-blue-600 hover:underline">
-                All
-              </a>
-              {years.map((year) => (
-                <a
-                  href={`/projects?year=${year}`}
-                  class="mr-2 text-blue-600 hover:underline"
-                >
-                  {year}
-                </a>
-              ))}
-            </div>
-          </div>
-        )
-      }
-    </div>
-
     <div class="max-w-4xl mx-auto my-4">
       {
-        paginatedProjects.length === 0 ? (
+        projects.length === 0 ? (
           <p>No projects found.</p>
         ) : (
           <div class="grid grid-cols-2 gap-4">
-            {paginatedProjects.map((project: any) => (
+            {projects.map((project: any) => (
               <article class="bg-white rounded shadow border border-sky-600">
                 <div class="p-4">
                   <h2 class="text-2xl font-medium m-0 mb-2">
@@ -141,26 +50,14 @@ const description = "Latest Projects";
                       {project.attributes.description}
                     </p>
                   )}
+                  {project.type && (
+                    <p class="text-sm text-gray-500 mb-2">
+                      <strong>Type:</strong> {project.type}
+                    </p>
+                  )}
                   {project.attributes?.techStack && (
                     <p class="text-sm text-gray-500 mb-2">
                       <strong>Tech:</strong> {project.attributes.techStack}
-                    </p>
-                  )}
-                  {project.attributes?.year && (
-                    <p class="text-sm text-gray-500">
-                      <strong>Year:</strong> {project.attributes.year}
-                    </p>
-                  )}
-                  {project.externalUrl && (
-                    <p class="mt-2">
-                      <a
-                        href={project.externalUrl}
-                        target="_blank"
-                        rel="noopener"
-                        class="text-blue-600 hover:underline text-sm"
-                      >
-                        View Project →
-                      </a>
                     </p>
                   )}
                 </div>
@@ -178,7 +75,7 @@ const description = "Latest Projects";
       pagination && (
         <ArchivePagination
           pagination={pagination}
-          basePath={basePath}
+          basePath="/projects"
           itemLabel="projects"
         />
       )
