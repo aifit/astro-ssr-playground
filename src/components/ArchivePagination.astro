@@ -10,24 +10,23 @@ interface Props {
 const { pagination, basePath, itemLabel } = Astro.props;
 ---
 
-<div>
-  <p>
+<nav class="flex justify-between items-center">
+  <div class="flex-1">
+    {
+      pagination.page < pagination.totalPages && (
+        <a href={`${basePath}?page=${pagination.page + 1}`}>← Older</a>
+      )
+    }
+  </div>
+  <p class="flex-1 text-center">
     Page {pagination.page} of {pagination.totalPages} (Total: {pagination.total}
     {itemLabel})
   </p>
-  <nav>
+  <div class="flex-1 text-right">
     {
       pagination.page > 1 && (
-        <a href={`${basePath}?page=${pagination.page - 1}`}>Previous</a>
+        <a href={`${basePath}?page=${pagination.page - 1}`}>Newer →</a>
       )
     }
-    {
-      pagination.page < pagination.totalPages && (
-        <>
-          {pagination.page > 1 && <span> | </span>}
-          <a href={`${basePath}?page=${pagination.page + 1}`}>Next</a>
-        </>
-      )
-    }
-  </nav>
-</div>
+  </div>
+</nav>
