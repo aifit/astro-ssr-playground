@@ -14,18 +14,28 @@ const { pagination, basePath, itemLabel } = Astro.props;
   <div class="flex-1">
     {
       pagination.page < pagination.totalPages && (
-        <a href={`${basePath}?page=${pagination.page + 1}`}>← Older</a>
+        <a
+          href={`${basePath}?page=${pagination.page + 1}`}
+          class="text-blue-600 hover:underline"
+        >
+          ← Older
+        </a>
       )
     }
   </div>
-  <p class="flex-1 text-center">
+  <p class="flex-1 text-center text-gray-500">
     Page {pagination.page} of {pagination.totalPages} (Total: {pagination.total}
     {itemLabel})
   </p>
   <div class="flex-1 text-right">
     {
       pagination.page > 1 && (
-        <a href={`${basePath}?page=${pagination.page - 1}`}>Newer →</a>
+        <a
+          href={`${basePath}?page=${pagination.page - 1}`}
+          class="text-blue-600 hover:underline"
+        >
+          Newer →
+        </a>
       )
     }
   </div>

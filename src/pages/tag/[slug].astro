@@ -51,15 +51,20 @@ const description = `Articles tagged with ${tagName}`;
       articles.length === 0 ? (
         <p>No articles found in this tag.</p>
       ) : (
-        <h1 class="text-3xl font-medium m-0 mb-4 text-center">Tag: {tagName}</h1>
-        <div class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4">
-          {tags.length > 0 && <Taxonomy variant="tag" label="Tags" items={tags} />}
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          {articles.map((article) => (
-            <ArticleCard article={article} />
-          ))}
-        </div>
+        <>
+          <h1 class="text-3xl font-medium m-0 mb-4 text-center">
+            Tag: {tagName}
+          </h1>
+
+          {tags.length > 0 && (
+            <Taxonomy variant="tag" label="All Tags" items={tags} />
+          )}
+          <div class="grid grid-cols-2 gap-4">
+            {articles.map((article) => (
+              <ArticleCard article={article} />
+            ))}
+          </div>
+        </>
       )
     }
   </div>

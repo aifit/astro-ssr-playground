@@ -33,21 +33,21 @@ const tags = deduplicateTags(articles);
   <div class="max-w-4xl mx-auto">
     <h1 class="text-3xl font-medium m-0 mb-4 text-center">All Articles</h1>
 
-    <div
-      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
-    >
-      {
-        categories.length > 0 && (
-          <Taxonomy variant="category" label="Categories" items={categories} />
-        )
-      }
-    </div>
+    {
+      categories.length > 0 && (
+        <Taxonomy
+          variant="category"
+          label="All Categories"
+          items={categories}
+        />
+      )
+    }
 
-    <div
-      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
-    >
-      {tags.length > 0 && <Taxonomy variant="tag" label="Tags" items={tags} />}
-    </div>
+    {
+      tags.length > 0 && (
+        <Taxonomy variant="tag" label="All Tags" items={tags} />
+      )
+    }
 
     {
       articles.length === 0 ? (
