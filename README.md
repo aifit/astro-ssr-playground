@@ -53,3 +53,20 @@ Nothing here is final - it's just a space to try SSR with Astro.
 pnpm dev      # Start dev server at http://localhost:4321
 pnpm build    # Build for production
 ```
+
+## SDK Generation
+
+This project uses [@hey-api/openapi-ts](https://github.com/hey-api/openapi-ts) to generate TypeScript SDK from Minima's OpenAPI specification.
+
+The SDK is already included in the repository (`src/sdk/`), but you can regenerate it if needed:
+
+```bash
+npx @hey-api/openapi-ts
+```
+
+Configuration is in `openapi-ts.config.ts`:
+
+- **Input**: `https://minima.ltd/api/v1/openapi.public.json`
+- **Output**: `src/sdk/`
+
+For more information, see [Minima API Documentation](https://docs.minima.ltd/developers/openapi).
