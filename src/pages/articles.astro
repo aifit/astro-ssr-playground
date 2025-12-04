@@ -5,6 +5,7 @@ import { minima } from "../lib/minima";
 import ArticleCard from "../components/ArticleCard.astro";
 import { buildTitle } from "../config/site";
 import Taxonomy from "../components/Taxonomy.astro";
+import { deduplicateTags } from "../lib/taxonomy";
 
 const title = await buildTitle("Articles");
 const description = "Latest Articles";
@@ -25,10 +26,7 @@ const articles = response.data?.data || [];
 const pagination = response.data?.pagination;
 
 // Fetch tags
-const allTags = articles.flatMap((article) => article.tags);
-const tags = Array.from(
-  new Map(allTags.map((tag) => [tag.slug, tag])).values()
-);
+const tags = deduplicateTags(articles);
 ---
 
 <BaseLayout title={title} description={description}>
