@@ -4,8 +4,6 @@ import ArchivePagination from "../../components/ArchivePagination.astro";
 import { minima } from "../../lib/minima";
 import { buildTitle } from "../../config/site";
 import ArticleCard from "../../components/ArticleCard.astro";
-import Taxonomy from "../../components/Taxonomy.astro";
-import { deduplicateTags } from "../../lib/taxonomy";
 
 // Get tag slug from URL params
 const { slug } = Astro.params;
@@ -32,15 +30,6 @@ const tagName =
     ? articles[0].tags.find((tag) => tag.slug === slug)?.name || slug
     : slug;
 
-// Fetch all articles to get all tags
-const allArticlesResponse = await minima.getPublicArticles({
-  limit: 4,
-  offset: 0,
-});
-
-const allArticles = allArticlesResponse.data?.data || [];
-const tags = deduplicateTags(allArticles);
-
 const title = await buildTitle(tagName);
 const description = `Articles tagged with ${tagName}`;
 ---
@@ -56,9 +45,6 @@ const description = `Articles tagged with ${tagName}`;
             Tag: {tagName}
           </h1>
 
-          {tags.length > 0 && (
-            <Taxonomy variant="tag" label="All Tags" items={tags} />
-          )}
           <div class="grid grid-cols-2 gap-4">
             {articles.map((article) => (
               <ArticleCard article={article} />
