@@ -1,0 +1,46 @@
+---
+import { getTagUrl, getCategoryUrl } from "../lib/url";
+import type { PublicTag, PublicSiteCategory } from "../sdk";
+
+const VARIANT_TAG = "tag" as const;
+const VARIANT_CATEGORY = "category" as const;
+
+// Props with variant for tag or category
+type Props =
+  | {
+      variant: typeof VARIANT_TAG;
+      items: PublicTag[];
+      label: string;
+    }
+  | {
+      variant: typeof VARIANT_CATEGORY;
+      items: PublicSiteCategory[];
+      label: string;
+    };
+
+const { items, label, variant } = Astro.props as Props;
+
+// Helper to get url based on variant
+function getItemUrl(item: PublicTag | PublicSiteCategory): string {
+  if (variant === VARIANT_TAG) {
+    return getTagUrl(item as PublicTag);
+  } else {
+    return getCategoryUrl(item as PublicSiteCategory);
+  }
+}
+---
+
+<div class="flex">
+  <div class="shrink-0 w-24">
+    <strong>{label} &nbsp;</strong>
+  </div>
+  <div>
+    {
+      items.map((item) => (
+        <a href={getItemUrl(item)} class="mr-2 text-blue-600 hover:underline">
+          {item.name}
+        </a>
+      ))
+    }
+  </div>
+</div>

@@ -2,9 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ArchivePagination from "../components/ArchivePagination.astro";
 import { minima } from "../lib/minima";
-import { getCategoryUrl, getTagUrl } from "../lib/url";
 import ArticleCard from "../components/ArticleCard.astro";
 import { buildTitle } from "../config/site";
+import Taxonomy from "../components/Taxonomy.astro";
 
 const title = await buildTitle("Articles");
 const description = "Latest Articles";
@@ -40,17 +40,7 @@ const tags = Array.from(
     >
       {
         categories.length > 0 && (
-          <div>
-            <strong>Categories &nbsp;</strong>
-            {categories.map((cat) => (
-              <a
-                href={getCategoryUrl(cat)}
-                class="mr-2 text-blue-600 hover:underline"
-              >
-                {cat.name}
-              </a>
-            ))}
-          </div>
+          <Taxonomy variant="category" label="Categories" items={categories} />
         )
       }
     </div>
@@ -58,21 +48,7 @@ const tags = Array.from(
     <div
       class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
     >
-      {
-        tags.length > 0 && (
-          <div>
-            <strong>Tags &nbsp;</strong>
-            {tags.map((tag) => (
-              <a
-                href={getTagUrl(tag)}
-                class="mr-2 text-blue-600 hover:underline"
-              >
-                {tag.name}
-              </a>
-            ))}
-          </div>
-        )
-      }
+      {tags.length > 0 && <Taxonomy variant="tag" label="Tags" items={tags} />}
     </div>
 
     {

@@ -2,9 +2,9 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArchivePagination from "../../components/ArchivePagination.astro";
 import { minima } from "../../lib/minima";
-import { getCategoryUrl } from "../../lib/url";
 import { buildTitle } from "../../config/site";
 import ArticleCard from "../../components/ArticleCard.astro";
+import Taxonomy from "../../components/Taxonomy.astro";
 
 // Get category slug from URL params
 const { slug } = Astro.params;
@@ -12,7 +12,7 @@ const { slug } = Astro.params;
 // Get pagination parameters from URL
 const url = new URL(Astro.request.url);
 const page = parseInt(url.searchParams.get("page") || "1");
-const limit = 10;
+const limit = 4;
 const offset = (page - 1) * limit;
 
 // Fetch articles by category
@@ -49,17 +49,7 @@ const description = `Articles in ${categoryName} category`;
         </h1>
         <div class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4">
           {categories.length > 0 && (
-            <div>
-              <strong>Categories &nbsp;</strong>
-              {categories.map((cat) => (
-                <a
-                  href={getCategoryUrl(cat)}
-                  class="mr-2 text-blue-600 hover:underline"
-                >
-                  {cat.name}
-                </a>
-              ))}
-            </div>
+            <Taxonomy variant="category" label="Categories" items={categories} />
           )}
         </div>
         <div class="grid grid-cols-2 gap-4">
