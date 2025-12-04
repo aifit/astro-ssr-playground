@@ -1,7 +1,7 @@
 ---
 import type { PublicUser } from "../sdk/types.gen";
 import { getImageUrl } from "../lib/image";
-
+import { formatDate } from "../lib/date";
 interface Props {
   author: PublicUser;
   publishedAt?: number;
@@ -38,13 +38,9 @@ const authorInitial = author.name ? author.name.charAt(0).toUpperCase() : "?";
       publishedAt && (
         <time
           class="text-sm text-neutral-9000"
-          datetime={new Date(publishedAt * 1000).toISOString()}
+          datetime={formatDate(publishedAt)}
         >
-          {new Date(publishedAt * 1000).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          })}
+          {formatDate(publishedAt)}
         </time>
       )
     }

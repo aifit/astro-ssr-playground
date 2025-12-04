@@ -2,9 +2,9 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ArchivePagination from "../components/ArchivePagination.astro";
 import { minima } from "../lib/minima";
-import { getCategoryUrl, getTagUrl } from "../lib/url";
 import ArticleCard from "../components/ArticleCard.astro";
 import { buildTitle } from "../config/site";
+import Taxonomy from "../components/Taxonomy.astro";
 
 const title = await buildTitle("Articles");
 const description = "Latest Articles";
@@ -23,57 +23,17 @@ const categories = categoriesResponse.data?.data || [];
 const response = await minima.getPublicArticles({ limit, offset });
 const articles = response.data?.data || [];
 const pagination = response.data?.pagination;
-
-// Fetch tags
-const allTags = articles.flatMap((article) => article.tags);
-const tags = Array.from(
-  new Map(allTags.map((tag) => [tag.slug, tag])).values()
-);
 ---
 
 <BaseLayout title={title} description={description}>
   <div class="max-w-4xl mx-auto">
     <h1 class="text-3xl font-medium m-0 mb-4 text-center">All Articles</h1>
 
-    <div
-      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
-    >
-      {
-        categories.length > 0 && (
-          <div>
-            <strong>Categories &nbsp;</strong>
-            {categories.map((cat) => (
-              <a
-                href={getCategoryUrl(cat)}
-                class="mr-2 text-blue-600 hover:underline"
-              >
-                {cat.name}
-              </a>
-            ))}
-          </div>
-        )
-      }
-    </div>
-
-    <div
-      class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4"
-    >
-      {
-        tags.length > 0 && (
-          <div>
-            <strong>Tags &nbsp;</strong>
-            {tags.map((tag) => (
-              <a
-                href={getTagUrl(tag)}
-                class="mr-2 text-blue-600 hover:underline"
-              >
-                {tag.name}
-              </a>
-            ))}
-          </div>
-        )
-      }
-    </div>
+    {
+      categories.length > 0 && (
+        <Taxonomy label="All Categories" items={categories} />
+      )
+    }
 
     {
       articles.length === 0 ? (
@@ -96,7 +56,7 @@ const tags = Array.from(
       pagination && (
         <ArchivePagination
           pagination={pagination}
-          basePath="/"
+          basePath="/articles"
           itemLabel="articles"
         />
       )

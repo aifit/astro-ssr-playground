@@ -1,0 +1,164 @@
+---
+import type {
+  PublicArticleRelationships,
+  PublicEntity,
+} from "../sdk/types.gen";
+
+interface Props {
+  relationships: PublicArticleRelationships;
+}
+
+const { relationships } = Astro.props;
+
+// Helper type for project with attributes
+interface ProjectWithAttributes extends PublicEntity {
+  attributes?: {
+    category?: string;
+    description?: string;
+    [key: string]: any;
+  };
+}
+
+// Extract and filter projects from relationships
+const aboutProjects: ProjectWithAttributes[] = [];
+const reviewedProjects: ProjectWithAttributes[] = [];
+const mentionedProjects: ProjectWithAttributes[] = [];
+
+// Process "about" relationships
+if (relationships?.about) {
+  for (const rel of relationships.about) {
+    const entity = Array.isArray(rel.entity) ? rel.entity[0] : rel.entity;
+    const attributes = (entity as any)?.attributes;
+
+    if (attributes && Object.keys(attributes).length > 0) {
+      aboutProjects.push(entity as ProjectWithAttributes);
+    }
+  }
+}
+
+// Process "itemReviewed" relationships
+if (relationships?.itemReviewed) {
+  for (const rel of relationships.itemReviewed) {
+    const entity = Array.isArray(rel.entity) ? rel.entity[0] : rel.entity;
+    const attributes = (entity as any)?.attributes;
+
+    if (attributes && Object.keys(attributes).length > 0) {
+      reviewedProjects.push(entity as ProjectWithAttributes);
+    }
+  }
+}
+
+// Process "mentions" relationships
+if (relationships?.mentions) {
+  for (const rel of relationships.mentions) {
+    const entity = Array.isArray(rel.entity) ? rel.entity[0] : rel.entity;
+    const attributes = (entity as any)?.attributes;
+
+    if (attributes && Object.keys(attributes).length > 0) {
+      mentionedProjects.push(entity as ProjectWithAttributes);
+    }
+  }
+}
+---
+
+{
+  reviewedProjects.length > 0 && (
+    <div class="border border-gray-300 my-5 bg-gray-100 rounded">
+      <p class="text-sm uppercase text-gray-700 m-0 border-b border-gray-300 p-4 leading-none">
+        Reviewed Project
+      </p>
+      <div class="p-4 bg-gray-50 space-y-4">
+        {reviewedProjects.map((project) => (
+          <div>
+            <h2 class="text-2xl font-medium m-0 mb-2">
+              <a
+                href={`/project/${project.slug}`}
+                class="text-blue-600 hover:underline"
+              >
+                {project.name}
+              </a>
+            </h2>
+
+            {project.attributes?.category && (
+              <p class="text-base text-gray-500 mb-2">
+                {project.attributes.category}
+              </p>
+            )}
+
+            {project.attributes?.description && (
+              <p class="text-gray-600 mb-2">{project.attributes.description}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+{
+  aboutProjects.length > 0 && (
+    <div class="border border-gray-300 my-5 bg-gray-100 rounded">
+      <p class="text-sm uppercase text-gray-700 m-0 border-b border-gray-300 p-4 leading-none">
+        Project Discussed
+      </p>
+      <div class="p-4 bg-gray-50 space-y-4">
+        {aboutProjects.map((project) => (
+          <div>
+            <h2 class="text-2xl font-medium m-0 mb-2">
+              <a
+                href={`/project/${project.slug}`}
+                class="text-blue-600 hover:underline"
+              >
+                {project.name}
+              </a>
+            </h2>
+
+            {project.attributes?.category && (
+              <p class="text-base text-gray-500 mb-2">
+                {project.attributes.category}
+              </p>
+            )}
+
+            {project.attributes?.description && (
+              <p class="text-gray-600 mb-2">{project.attributes.description}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+{
+  mentionedProjects.length > 0 && (
+    <div class="border border-gray-300 my-5 bg-gray-100 rounded">
+      <p class="text-sm uppercase text-gray-700 m-0 border-b border-gray-300 p-4 leading-none">
+        Project Mentioned
+      </p>
+      <div class="p-4 bg-gray-50 space-y-4">
+        {mentionedProjects.map((project) => (
+          <div>
+            <h2 class="text-2xl font-medium m-0 mb-2">
+              <a
+                href={`/project/${project.slug}`}
+                class="text-blue-600 hover:underline"
+              >
+                {project.name}
+              </a>
+            </h2>
+
+            {project.attributes?.category && (
+              <p class="text-base text-gray-500 mb-2">
+                {project.attributes.category}
+              </p>
+            )}
+
+            {project.attributes?.description && (
+              <p class="text-gray-600 mb-2">{project.attributes.description}</p>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}

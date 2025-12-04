@@ -1,11 +1,19 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { minima } from "../../lib/minima";
-import type { PublicArticle, PublicEntity } from "../../sdk/types.gen";
+import type {
+  PublicArticle,
+  PublicEntity,
+  PublicImage,
+} from "../../sdk/types.gen";
 import { buildTitle } from "../../config/site";
+import HeroImage from "../../components/HeroImage.astro";
+import ProjectRelationships from "../../components/ProjectRelationships.astro";
 
 type EntityWithAttributes = PublicEntity & {
   attributes?: Record<string, any>;
+  heroImage?: PublicImage;
+  type?: PublicEntity;
 };
 
 const { slug } = Astro.params;
@@ -17,47 +25,8 @@ if (!project) {
   return Astro.redirect("/404");
 }
 
-const articlesResponse = await minima.getPublicArticles({ limit: 100 });
-const allArticles = articlesResponse.data?.data || [];
-
-const relatedArticles: Array<{
-  article: PublicArticle;
-  relationshipType: string;
-}> = [];
-
-for (const article of allArticles) {
-  const rels = article.relationships;
-
-  if (rels.itemReviewed && Array.isArray(rels.itemReviewed)) {
-    for (const rel of rels.itemReviewed) {
-      const entities = Array.isArray(rel.entity) ? rel.entity : [rel.entity];
-      if (entities.some((e) => e.id === project.id)) {
-        relatedArticles.push({ article, relationshipType: "Review" });
-        break;
-      }
-    }
-  }
-
-  if (rels.about && Array.isArray(rels.about)) {
-    for (const rel of rels.about) {
-      const entities = Array.isArray(rel.entity) ? rel.entity : [rel.entity];
-      if (entities.some((e) => e.id === project.id)) {
-        relatedArticles.push({ article, relationshipType: "About" });
-        break;
-      }
-    }
-  }
-
-  if (rels.mentions && Array.isArray(rels.mentions)) {
-    for (const rel of rels.mentions) {
-      const entities = Array.isArray(rel.entity) ? rel.entity : [rel.entity];
-      if (entities.some((e) => e.id === project.id)) {
-        relatedArticles.push({ article, relationshipType: "Mentions" });
-        break;
-      }
-    }
-  }
-}
+const articleResponse = await minima.getPublicArticles({ limit: 100 });
+const allArticles = articleResponse.data?.data || [];
 
 const title = await buildTitle(project.name);
 const description = (project as any).attributes?.description || "";
@@ -68,82 +37,111 @@ const description = (project as any).attributes?.description || "";
     <main
       class="bg-white max-w-4xl mx-auto p-6 rounded shadow border border-sky-600"
     >
-      <h1 class="text-4xl font-bold m-0 mb-6">{project.name}</h1>
-
-      <p class="text-sm text-gray-500 mb-4">
-        Published: {new Date(project.publishedAt * 1000).toLocaleDateString()}
-      </p>
+      <div class="mb-6">
+        <a
+          href="/projects"
+          class="inline-flex items-center text-blue-600 hover:underline"
+        >
+          ← Back to All Projects
+        </a>
+      </div>
 
       {
-        project.externalUrl && (
+        project.heroImage && (
           <div class="mb-6">
-            <a
-              href={project.externalUrl}
-              target="_blank"
-              rel="noopener"
-              class="inline-block bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
-            >
-              View Live Project →
-            </a>
+            <HeroImage image={project.heroImage} alt={project.name} />
+          </div>
+        )
+      }
+      <h1 class="text-2xl font-medium m-0 mb-6">
+        <a href={`/project/${project.slug}`}>{project.name}</a>
+      </h1>
+
+      {
+        project.attributes?.description && (
+          <div>
+            <p>{project.attributes.description}</p>
           </div>
         )
       }
 
-      {
-        project.attributes && Object.keys(project.attributes).length > 0 && (
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold mb-4">Properties</h2>
-            <dl class="space-y-2">
-              {Object.entries(project.attributes).map(
-                ([key, value]: [string, any]) => (
-                  <>
-                    <dt class="font-medium text-gray-700">{key}:</dt>
-                    <dd class="text-gray-600 ml-4 mb-3">
-                      {typeof value === "object"
-                        ? JSON.stringify(value, null, 2)
-                        : String(value)}
-                    </dd>
-                  </>
-                )
-              )}
-            </dl>
-          </div>
-        )
-      }
+      <div class="mb-4 grid grid-cols-1 md:grid-cols-2 gap-2">
+        {
+          project.externalUrl && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Live URL</div>
+              <p class="text-gray-600">{project.externalUrl}</p>
+            </div>
+          )
+        }
 
-      {
-        relatedArticles.length > 0 && (
-          <div class="mb-6">
-            <h2 class="text-2xl font-bold mb-4">
-              Related Articles ({relatedArticles.length})
-            </h2>
-            <ul class="space-y-4">
-              {relatedArticles.map(({ article, relationshipType }) => (
-                <li class="border-l-4 border-blue-600 pl-4">
-                  <h3 class="text-xl font-medium">
-                    <a
-                      href={`/article/${article.slug}`}
-                      class="text-blue-600 hover:underline"
-                    >
-                      {article.headline}
-                    </a>
-                  </h3>
-                  <p class="text-sm text-gray-500">
-                    <strong>Type:</strong> {relationshipType}
-                  </p>
-                  {article.description && (
-                    <p class="text-gray-600">{article.description}</p>
-                  )}
-                  <p class="text-sm text-gray-500">
-                    By {article.author.name} on{" "}
-                    {new Date(article.publishedAt * 1000).toLocaleDateString()}
-                  </p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )
-      }
+        {
+          project.attributes?.category && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Category</div>
+              <p class="text-gray-600">{project.attributes.category}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.techStack && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Tech Stack</div>
+              <p class="text-gray-600">{project.attributes.techStack}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.launchDate && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Launch Date</div>
+              <p class="text-gray-600">{project.attributes.launchDate}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.projectDuration && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">
+                Project Duration
+              </div>
+              <p class="text-gray-600">{project.attributes.projectDuration}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.client && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Client</div>
+              <p class="text-gray-600">{project.attributes.client}</p>
+            </div>
+          )
+        }
+
+        {
+          project.attributes?.platform && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Platform</div>
+              <p class="text-gray-600">{project.attributes.platform}</p>
+            </div>
+          )
+        }
+
+        {
+          project.type && (
+            <div>
+              <div class="text-base mt-2 mb-2 text-gray-500">Type</div>
+              <p class="text-gray-600">{project.type}</p>
+            </div>
+          )
+        }
+      </div>
+
+      <ProjectRelationships project={project} articles={allArticles} />
     </main>
   </article>
 </BaseLayout>

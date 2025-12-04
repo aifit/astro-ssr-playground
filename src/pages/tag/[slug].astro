@@ -2,7 +2,6 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import ArchivePagination from "../../components/ArchivePagination.astro";
 import { minima } from "../../lib/minima";
-import { getTagUrl } from "../../lib/url";
 import { buildTitle } from "../../config/site";
 import ArticleCard from "../../components/ArticleCard.astro";
 
@@ -31,18 +30,6 @@ const tagName =
     ? articles[0].tags.find((tag) => tag.slug === slug)?.name || slug
     : slug;
 
-// Fetch all articles to get all tags
-const allArticlesResponse = await minima.getPublicArticles({
-  limit: 1000,
-  offset: 0,
-});
-
-const allArticles = allArticlesResponse.data?.data || [];
-const allTags = allArticles.flatMap((article) => article.tags);
-const tags = Array.from(
-  new Map(allTags.map((tag) => [tag.slug, tag])).values()
-);
-
 const title = await buildTitle(tagName);
 const description = `Articles tagged with ${tagName}`;
 ---
@@ -53,27 +40,17 @@ const description = `Articles tagged with ${tagName}`;
       articles.length === 0 ? (
         <p>No articles found in this tag.</p>
       ) : (
-        <h1 class="text-3xl font-medium m-0 mb-4 text-center">Tag: {tagName}</h1>
-        <div class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mb-4">
-          {tags.length > 0 && (
-            <div>
-              <strong>Tags &nbsp;</strong>
-              {tags.map((tag) => (
-                <a
-                  href={getTagUrl(tag)}
-                  class="mr-2 text-blue-600 hover:underline"
-                >
-                  {tag.name}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          {articles.map((article) => (
-            <ArticleCard article={article} />
-          ))}
-        </div>
+        <>
+          <h1 class="text-3xl font-medium m-0 mb-4 text-center">
+            Tag: {tagName}
+          </h1>
+
+          <div class="grid grid-cols-2 gap-4">
+            {articles.map((article) => (
+              <ArticleCard article={article} />
+            ))}
+          </div>
+        </>
       )
     }
   </div>

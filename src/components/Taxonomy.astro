@@ -1,0 +1,31 @@
+---
+import { getCategoryUrl } from "../lib/url";
+import type { PublicSiteCategory } from "../sdk";
+
+type Props = {
+  items: PublicSiteCategory[];
+  label: string;
+};
+
+const { items, label } = Astro.props as Props;
+---
+
+<div
+  class="max-w-4xl mx-auto bg-white rounded shadow border border-sky-600 mb-4 flex items-center"
+>
+  <div class="shrink-0 border-r border-sky-600 p-4">
+    <strong>{label} &nbsp;</strong>
+  </div>
+  <div class="p-4">
+    {
+      items.map((item) => (
+        <a
+          href={getCategoryUrl(item)}
+          class="mr-2 text-blue-600 hover:underline inline-block px-1"
+        >
+          {item.name}
+        </a>
+      ))
+    }
+  </div>
+</div>

@@ -1,4 +1,5 @@
 import type { TiptapSchema, TiptapNode, PublicImage } from "../sdk/types.gen";
+import { CDN_BASE_URL } from "./constants";
 
 // Render Tiptap JSON content to HTML
 export function renderTiptapContent(content: TiptapSchema, images: PublicImage[] = []): string {
@@ -105,14 +106,14 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     if (imageId && images.length > 0) {
       const image = images.find((img) => img.id === imageId);
       if (image) {
-        const src = `https://r2.minima.ltd/${image.path}`;
+        const src = `${CDN_BASE_URL}/${image.path}`;
         const alt = image.caption || "";
         const caption = image.caption;
 
         if (caption) {
           html += `<figure>`;
           html += `<img src="${src}" alt="${alt}" width="${image.width}" height="${image.height}" />`;
-          html += `<figcaption>${caption}</figcaption>`;
+          html += `<figcaption class="text-center text-sm text-gray-500 mt-2">${caption}</figcaption>`;
           html += `</figure>`;
         } else {
           html += `<img src="${src}" alt="${alt}" width="${image.width}" height="${image.height}" />`;

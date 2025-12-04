@@ -1,0 +1,137 @@
+---
+import type { PublicArticle, PublicEntity } from "../sdk/types.gen";
+import { formatDate } from "../lib/date";
+
+interface Props {
+  project: PublicEntity;
+  articles: PublicArticle[];
+}
+
+const { project, articles } = Astro.props;
+
+const reviews: PublicArticle[] = [];
+const aboutArticles: PublicArticle[] = [];
+const mentions: PublicArticle[] = [];
+
+for (const article of articles) {
+  const rels = article.relationships;
+
+  // Check Item Reviewed (Reviews)
+  if (rels.itemReviewed) {
+    const entities = rels.itemReviewed.flatMap((r) =>
+      Array.isArray(r.entity) ? r.entity : [r.entity]
+    );
+    if (entities.some((e) => e.id === project.id)) {
+      reviews.push(article);
+      continue;
+    }
+  }
+
+  // Check About
+  if (rels.about) {
+    const entities = rels.about.flatMap((r) =>
+      Array.isArray(r.entity) ? r.entity : [r.entity]
+    );
+    if (entities.some((e) => e.id === project.id)) {
+      aboutArticles.push(article);
+      continue;
+    }
+  }
+
+  // Check Mentions
+  if (rels.mentions) {
+    const entities = rels.mentions.flatMap((r) =>
+      Array.isArray(r.entity) ? r.entity : [r.entity]
+    );
+    if (entities.some((e) => e.id === project.id)) {
+      mentions.push(article);
+    }
+  }
+}
+---
+
+{
+  reviews.length > 0 && (
+    <div class="mt-8 pt-6 border-t border-gray-300">
+      <h2 class="text-xl font-medium m-0 mb-6">Project Reviews</h2>
+      <div class="space-y-4">
+        {reviews.map((article) => (
+          <div class="border-l-2 border-blue-600 pl-4">
+            <h4 class="font-medium m-0 mb-0">
+              <a
+                href={`/article/${article.slug}`}
+                class="text-blue-600 hover:underline"
+              >
+                {article.headline}
+              </a>
+            </h4>
+            {article.description && (
+              <p class="text-gray-600 mb-2">{article.description}</p>
+            )}
+            <p class="text-sm text-gray-500">
+              By {article.author.name} on {formatDate(article.publishedAt)}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+{
+  aboutArticles.length > 0 && (
+    <div class="mt-8 pt-6 border-t border-gray-300">
+      <h2 class="text-xl font-medium m-0 mb-6">Articles About This Project</h2>
+      <div class="space-y-4">
+        {aboutArticles.map((article) => (
+          <div class="border-l-2 border-green-600 pl-4">
+            <h4 class="font-medium m-0 mb-0">
+              <a
+                href={`/article/${article.slug}`}
+                class="text-blue-600 hover:underline"
+              >
+                {article.headline}
+              </a>
+            </h4>
+            {article.description && (
+              <p class="text-gray-600 mb-2">{article.description}</p>
+            )}
+            <p class="text-sm text-gray-500">
+              By {article.author.name} on {formatDate(article.publishedAt)}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
+{
+  mentions.length > 0 && (
+    <div class="mt-8 pt-6 border-t border-gray-300">
+      <h2 class="text-xl font-medium m-0 mb-6">
+        Articles Mentioning This Project
+      </h2>
+      <div class="space-y-4">
+        {mentions.map((article) => (
+          <div class="border-l-2 border-gray-400 pl-4">
+            <h4 class="font-medium m-0 mb-0">
+              <a
+                href={`/article/${article.slug}`}
+                class="text-blue-600 hover:underline"
+              >
+                {article.headline}
+              </a>
+            </h4>
+            {article.description && (
+              <p class="text-gray-600 mb-2">{article.description}</p>
+            )}
+            <p class="text-sm text-gray-500">
+              By {article.author.name} on {formatDate(article.publishedAt)}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
