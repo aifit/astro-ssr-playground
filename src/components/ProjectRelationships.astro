@@ -1,6 +1,7 @@
 ---
 import type { PublicArticle, PublicEntity } from "../sdk/types.gen";
 import { formatDate } from "../lib/date";
+import { getArticleUrl } from "../lib/url";
 
 interface Props {
   project: PublicEntity;
@@ -59,7 +60,7 @@ for (const article of articles) {
           <div class="border-l-2 border-blue-600 pl-4">
             <h4 class="font-medium m-0 mb-0">
               <a
-                href={`/article/${article.slug}`}
+                href={getArticleUrl(article)}
                 class="text-blue-600 hover:underline"
               >
                 {article.headline}
@@ -87,7 +88,7 @@ for (const article of articles) {
           <div class="border-l-2 border-green-600 pl-4">
             <h4 class="font-medium m-0 mb-0">
               <a
-                href={`/article/${article.slug}`}
+                href={getArticleUrl(article)}
                 class="text-blue-600 hover:underline"
               >
                 {article.headline}
@@ -117,7 +118,7 @@ for (const article of articles) {
           <div class="border-l-2 border-gray-400 pl-4">
             <h4 class="font-medium m-0 mb-0">
               <a
-                href={`/article/${article.slug}`}
+                href={getArticleUrl(article)}
                 class="text-blue-600 hover:underline"
               >
                 {article.headline}

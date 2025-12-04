@@ -1,16 +1,31 @@
-import type { PublicArticle, PublicSiteCategory, PublicTag } from "../sdk/types.gen";
+import type { PublicArticle, PublicEntity, PublicSiteCategory, PublicTag } from "../sdk/types.gen";
 
 /**
  * Get article URL from Minima's canonical permalink
- * This uses the permalink provided by Minima CMS and prepends /article/
- * to match our Astro routing structure at /src/pages/article/[slug].astro
+ * This uses the permalink provided by Minima CMS and prepends /articles/
+ * to match our Astro routing structure at /src/pages/articles/[slug].astro
  */
 export function getArticleUrl(article: PublicArticle): string {
-  const path = article.permalink.path;
+  // Handle cases where permalink might be null/undefined (defensive programming)
+  const path = article.permalink?.path || article.slug;
 
-  // Remove leading slash if present, then add /article/ prefix
+  // Remove leading slash if present, then add /articles/ prefix
   const slug = path.startsWith('/') ? path.slice(1) : path;
-  return `/article/${slug}`;
+  return `/articles/${slug}`;
+}
+
+/**
+ * Get project URL from Minima's canonical permalink
+ * This uses the permalink provided by Minima CMS and prepends /projects/
+ * to match our Astro routing structure at /src/pages/projects/[slug].astro
+ */
+export function getProjectUrl(project: PublicEntity): string {
+  // Handle cases where permalink might be null/undefined
+  const path = project.permalink?.path || project.slug;
+
+  // Remove leading slash if present, then add /projects/ prefix
+  const slug = path.startsWith('/') ? path.slice(1) : path;
+  return `/projects/${slug}`;
 }
 
 /**
