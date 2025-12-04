@@ -5,6 +5,7 @@ import { renderTiptapContent } from "../../lib/editor";
 
 import ArticleHeadline from "../../components/ArticleHeadline.astro";
 import ArticleMeta from "../../components/ArticleMeta.astro";
+import ArticleRelationships from "../../components/ArticleRelationships.astro";
 import { buildTitle } from "../../config/site";
 
 // Get slug from URL params
@@ -41,6 +42,7 @@ const description = article.description || "";
       <div set:html={renderTiptapContent(article.body, article.images || [])} />
 
       <footer class="max-w-4xl mx-auto">
+        <ArticleRelationships relationships={article.relationships} />
         <ArticleMeta article={article} />
       </footer>
     </main>

@@ -1,0 +1,267 @@
+---
+import type { PublicArticleRelationships } from "../sdk/types.gen";
+
+interface Props {
+  relationships: PublicArticleRelationships;
+}
+
+const { relationships } = Astro.props;
+---
+
+{
+  relationships?.about && relationships.about.length > 0 && (
+    <>
+      {relationships.about.map((rel) => {
+        const entity = Array.isArray(rel.entity) ? rel.entity[0] : rel.entity;
+        const attributes = (entity as any)?.attributes;
+
+        if (attributes && Object.keys(attributes).length > 0) {
+          return (
+            <div class="border border-gray-300 p-4 my-5 bg-gray-50 rounded">
+              <p class="text-sm text-gray-500 mb-2">Related project</p>
+              <h3 class="mt-0 text-lg font-medium">
+                <a
+                  href={`/project/${entity.slug}`}
+                  class="text-blue-600 hover:underline"
+                >
+                  {entity.name}
+                </a>
+              </h3>
+
+              {attributes.description && (
+                <p class="text-gray-600 mb-3">{attributes.description}</p>
+              )}
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {attributes.category && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Category:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.category}</span>
+                  </div>
+                )}
+
+                {attributes.techStack && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Tech Stack:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.techStack}</span>
+                  </div>
+                )}
+
+                {attributes.year && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">Year:</span>{" "}
+                    <span class="text-gray-600">{attributes.year}</span>
+                  </div>
+                )}
+
+                {attributes.launchDate && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Launch Date:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.launchDate}</span>
+                  </div>
+                )}
+
+                {attributes.client && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">Client:</span>{" "}
+                    <span class="text-gray-600">{attributes.client}</span>
+                  </div>
+                )}
+
+                {attributes.projectDuration && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Duration:
+                    </span>{" "}
+                    <span class="text-gray-600">
+                      {attributes.projectDuration}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+        return null;
+      })}
+    </>
+  )
+}
+
+{
+  relationships?.itemReviewed && relationships.itemReviewed.length > 0 && (
+    <>
+      {relationships.itemReviewed.map((rel) => {
+        const entity = Array.isArray(rel.entity) ? rel.entity[0] : rel.entity;
+        const attributes = (entity as any)?.attributes;
+
+        if (attributes && Object.keys(attributes).length > 0) {
+          return (
+            <div class="border border-gray-300 p-4 my-5 bg-gray-50 rounded">
+              <p class="text-sm text-gray-500 mb-2">Related project</p>
+              <h3 class="mt-0 text-lg font-medium">
+                <a
+                  href={`/project/${entity.slug}`}
+                  class="text-blue-600 hover:underline"
+                >
+                  {entity.name}
+                </a>
+              </h3>
+
+              {attributes.description && (
+                <p class="text-gray-600 mb-3">{attributes.description}</p>
+              )}
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {attributes.category && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Category:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.category}</span>
+                  </div>
+                )}
+
+                {attributes.techStack && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Tech Stack:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.techStack}</span>
+                  </div>
+                )}
+
+                {attributes.year && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">Year:</span>{" "}
+                    <span class="text-gray-600">{attributes.year}</span>
+                  </div>
+                )}
+
+                {attributes.launchDate && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Launch Date:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.launchDate}</span>
+                  </div>
+                )}
+
+                {attributes.client && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">Client:</span>{" "}
+                    <span class="text-gray-600">{attributes.client}</span>
+                  </div>
+                )}
+
+                {attributes.projectDuration && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Duration:
+                    </span>{" "}
+                    <span class="text-gray-600">
+                      {attributes.projectDuration}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+        return null;
+      })}
+    </>
+  )
+}
+
+{
+  relationships?.mentions && relationships.mentions.length > 0 && (
+    <>
+      {relationships.mentions.map((rel) => {
+        const entity = Array.isArray(rel.entity) ? rel.entity[0] : rel.entity;
+        const attributes = (entity as any)?.attributes;
+
+        if (attributes && Object.keys(attributes).length > 0) {
+          return (
+            <div class="border border-gray-300 p-4 my-5 bg-gray-50 rounded">
+              <p class="text-sm text-gray-500 mb-2">Related project</p>
+              <h3 class="mt-0 text-lg font-medium">
+                <a
+                  href={`/project/${entity.slug}`}
+                  class="text-blue-600 hover:underline"
+                >
+                  {entity.name}
+                </a>
+              </h3>
+
+              {attributes.description && (
+                <p class="text-gray-600 mb-3">{attributes.description}</p>
+              )}
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {attributes.category && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Category:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.category}</span>
+                  </div>
+                )}
+
+                {attributes.techStack && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Tech Stack:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.techStack}</span>
+                  </div>
+                )}
+
+                {attributes.year && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">Year:</span>{" "}
+                    <span class="text-gray-600">{attributes.year}</span>
+                  </div>
+                )}
+
+                {attributes.launchDate && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Launch Date:
+                    </span>{" "}
+                    <span class="text-gray-600">{attributes.launchDate}</span>
+                  </div>
+                )}
+
+                {attributes.client && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">Client:</span>{" "}
+                    <span class="text-gray-600">{attributes.client}</span>
+                  </div>
+                )}
+
+                {attributes.projectDuration && (
+                  <div>
+                    <span class="font-bold text-sm text-gray-700">
+                      Duration:
+                    </span>{" "}
+                    <span class="text-gray-600">
+                      {attributes.projectDuration}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+          );
+        }
+        return null;
+      })}
+    </>
+  )
+}
