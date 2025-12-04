@@ -4,7 +4,6 @@ import { minima } from "../../lib/minima";
 import { renderTiptapContent } from "../../lib/editor";
 
 import ArticleHeadline from "../../components/ArticleHeadline.astro";
-import ArticlePagination from "../../components/ArticlePagination.astro";
 import ArticleMeta from "../../components/ArticleMeta.astro";
 import { buildTitle } from "../../config/site";
 
@@ -43,9 +42,6 @@ const description = article.description || "";
 
       <footer class="max-w-4xl mx-auto">
         <ArticleMeta article={article} />
-        <div class="mt-4 pt-4">
-          <ArticlePagination currentSlug={article.slug} />
-        </div>
       </footer>
     </main>
   </article>
