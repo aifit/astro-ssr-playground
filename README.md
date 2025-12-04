@@ -23,7 +23,7 @@ Nothing here is final - it's just a space to try SSR with Astro.
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yja/astro-ssr.git
+   git clone git@github.com:aifit/astro-ssr-playground.git
    cd astro-ssr
    ```
 
