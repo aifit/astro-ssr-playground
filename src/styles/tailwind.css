@@ -46,7 +46,7 @@ article {
   }
 
   img {
-    @apply mb-6 mt-6 rounded border border-gray-200;
+    @apply rounded border border-gray-200;
   }
 
   figure {

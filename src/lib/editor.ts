@@ -112,7 +112,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
         if (caption) {
           html += `<figure>`;
           html += `<img src="${src}" alt="${alt}" width="${image.width}" height="${image.height}" />`;
-          html += `<figcaption>${caption}</figcaption>`;
+          html += `<figcaption class="text-center text-sm text-gray-500 mt-2">${caption}</figcaption>`;
           html += `</figure>`;
         } else {
           html += `<img src="${src}" alt="${alt}" width="${image.width}" height="${image.height}" />`;

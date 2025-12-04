@@ -2,8 +2,7 @@
 import type { PublicArticle } from "../sdk/types.gen";
 import ArticleAuthor from "./ArticleAuthor.astro";
 import { getArticleUrl } from "../lib/url";
-import ArticleHeroImage from "./ArticleHeroImage.astro";
-import { getImageUrl } from "../lib/image";
+import HeroImage from "./HeroImage.astro";
 
 interface Props {
   article: PublicArticle;
@@ -11,17 +10,13 @@ interface Props {
 
 const { article } = Astro.props;
 
-const heroImageUrl = article.heroImage
-  ? getImageUrl(article.heroImage.path)
-  : "";
-
 const excerpt = article.description || article.subHeadline || "";
 ---
 
 <div>
   {
     article.heroImage && (
-      <ArticleHeroImage article={article} imageUrl={heroImageUrl} />
+      <HeroImage image={article.heroImage} alt={article.headline} />
     )
   }
   <h1 class="text-2xl font-medium m-0 mb-6 mt-6">

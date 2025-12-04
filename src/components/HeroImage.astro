@@ -1,0 +1,33 @@
+---
+import type { PublicImage } from "../sdk/types.gen";
+import { getImageUrl } from "../lib/image";
+
+interface Props {
+  image: PublicImage;
+  alt?: string;
+}
+
+const { image, alt } = Astro.props;
+const src = getImageUrl(image.path);
+---
+
+<figure>
+  <img
+    src={src}
+    alt={alt || image.caption || "Hero image"}
+    width={image.width}
+    height={image.height}
+    class="w-full h-auto rounded shadow-md m-0"
+  />
+  {
+    (image.caption || image.attributes?.credit) && (
+      <figcaption class="text-center text-sm text-gray-500 mt-2">
+        {image.caption}
+        {image.caption && image.attributes?.credit && " • "}
+        {image.attributes?.credit && (
+          <span class="italic">Credit: {image.attributes.credit}</span>
+        )}
+      </figcaption>
+    )
+  }
+</figure>
