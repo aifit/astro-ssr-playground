@@ -34,12 +34,6 @@ const categoryName =
 const categoriesResponse = await minima.getPublicCategories();
 const categories = categoriesResponse.data?.data || [];
 
-// DEBUG: Check category slugs from API
-console.log(
-  "🔍 Categories from API:",
-  categories.map((c) => ({ name: c.name, slug: c.slug }))
-);
-
 const title = await buildTitle(categoryName);
 const description = `Articles in ${categoryName} category`;
 ---
