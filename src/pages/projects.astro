@@ -10,22 +10,10 @@ const page = parseInt(url.searchParams.get("page") || "1");
 const limit = 4;
 const offset = (page - 1) * limit;
 
-// Fetch all projects
-const response = await minima.getPublicEntities();
-const allProjects = response.data?.data || [];
-
-// Paginate
-const paginatedProjects = allProjects.slice(offset, offset + limit);
-
-const pagination = {
-  total: allProjects.length,
-  limit,
-  offset,
-  page,
-  totalPages: Math.ceil(allProjects.length / limit),
-};
-
-const projects = paginatedProjects;
+// Fetch projects with pagination
+const response = await minima.getPublicEntities({ limit, offset });
+const projects = response.data?.data || [];
+const pagination = response.data?.pagination;
 
 const title = await buildTitle("Projects");
 const description = "Latest Projects";
