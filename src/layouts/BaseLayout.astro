@@ -81,7 +81,7 @@ const secondaryMenu = menus.find((menu) => menu.slug === "secondarymenu");
               <a
                 class="text-blue-700 hover:text-blue-800 hover:underline"
                 href={href}
-                target={item.openInNewTab ? "_blank" : "_self"}
+                target={item.linkType === "external" ? "_blank" : "_self"}
               >
                 {item.label}
               </a>
