@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { ConfirmPublicSubscriberData, ConfirmPublicSubscriberErrors, ConfirmPublicSubscriberResponses, CreatePublicSubscriberData, CreatePublicSubscriberErrors, CreatePublicSubscriberResponses, GetPublicArticleBySlugData, GetPublicArticleBySlugErrors, GetPublicArticleBySlugResponses, GetPublicArticlesData, GetPublicArticlesResponses, GetPublicCategoriesData, GetPublicCategoriesResponses, GetPublicEntitiesData, GetPublicEntitiesResponses, GetPublicEntityBySlugData, GetPublicEntityBySlugErrors, GetPublicEntityBySlugResponses, GetPublicSiteData, GetPublicSiteResponses, GetSubscriberListsData, GetSubscriberListsErrors, GetSubscriberListsResponses, ResolvePublicPermalinkData, ResolvePublicPermalinkErrors, ResolvePublicPermalinkResponses, UnsubscribeFromSpecificListsData, UnsubscribeFromSpecificListsErrors, UnsubscribeFromSpecificListsResponses } from './types.gen';
+import type { ConfirmPublicSubscriberData, ConfirmPublicSubscriberErrors, ConfirmPublicSubscriberResponses, CreatePublicSubscriberData, CreatePublicSubscriberErrors, CreatePublicSubscriberResponses, GetPermalinkByPathData, GetPermalinkByPathErrors, GetPermalinkByPathResponses, GetPublicArticleByIdData, GetPublicArticleByIdErrors, GetPublicArticleByIdResponses, GetPublicArticleBySlugData, GetPublicArticleBySlugErrors, GetPublicArticleBySlugResponses, GetPublicArticlesData, GetPublicArticlesResponses, GetPublicCategoriesData, GetPublicCategoriesResponses, GetPublicEntitiesData, GetPublicEntitiesResponses, GetPublicEntityByIdData, GetPublicEntityByIdErrors, GetPublicEntityByIdResponses, GetPublicEntityBySlugData, GetPublicEntityBySlugErrors, GetPublicEntityBySlugResponses, GetPublicPageByIdData, GetPublicPageByIdErrors, GetPublicPageByIdResponses, GetPublicPageBySlugData, GetPublicPageBySlugErrors, GetPublicPageBySlugResponses, GetPublicSiteData, GetPublicSiteErrors, GetPublicSiteResponses, GetSubscriberListsData, GetSubscriberListsErrors, GetSubscriberListsResponses, PreviewResourceData, PreviewResourceErrors, PreviewResourceResponses, ResolvePublicPermalinkData, ResolvePublicPermalinkErrors, ResolvePublicPermalinkResponses, UnsubscribeFromSpecificListsData, UnsubscribeFromSpecificListsErrors, UnsubscribeFromSpecificListsResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -19,9 +19,12 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
 };
 
 /**
+ * Create Subscriber
+ *
  * Create a new email subscriber
  */
 export const createPublicSubscriber = <ThrowOnError extends boolean = false>(options: Options<CreatePublicSubscriberData, ThrowOnError>) => (options.client ?? client).post<CreatePublicSubscriberResponses, CreatePublicSubscriberErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
     url: '/public/sites/{siteId}/subscribers',
     ...options,
     headers: {
@@ -31,19 +34,34 @@ export const createPublicSubscriber = <ThrowOnError extends boolean = false>(opt
 });
 
 /**
+ * Get Site
+ *
  * Get a public site by its ID. Includes menus and categories.
  */
-export const getPublicSite = <ThrowOnError extends boolean = false>(options: Options<GetPublicSiteData, ThrowOnError>) => (options.client ?? client).get<GetPublicSiteResponses, unknown, ThrowOnError>({ url: '/public/sites/{siteId}', ...options });
+export const getPublicSite = <ThrowOnError extends boolean = false>(options: Options<GetPublicSiteData, ThrowOnError>) => (options.client ?? client).get<GetPublicSiteResponses, GetPublicSiteErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}',
+    ...options
+});
 
 /**
+ * Get Subscriber Lists
+ *
  * View all lists a subscriber is subscribed to and available public lists on the site. Requires unsubscribe token for authentication.
  */
-export const getSubscriberLists = <ThrowOnError extends boolean = false>(options: Options<GetSubscriberListsData, ThrowOnError>) => (options.client ?? client).get<GetSubscriberListsResponses, GetSubscriberListsErrors, ThrowOnError>({ url: '/public/sites/{siteId}/subscribers/lists', ...options });
+export const getSubscriberLists = <ThrowOnError extends boolean = false>(options: Options<GetSubscriberListsData, ThrowOnError>) => (options.client ?? client).get<GetSubscriberListsResponses, GetSubscriberListsErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/subscribers/lists',
+    ...options
+});
 
 /**
+ * Confirm Subscription
+ *
  * Confirm email subscription using email address and 6-digit code sent in confirmation email
  */
 export const confirmPublicSubscriber = <ThrowOnError extends boolean = false>(options: Options<ConfirmPublicSubscriberData, ThrowOnError>) => (options.client ?? client).post<ConfirmPublicSubscriberResponses, ConfirmPublicSubscriberErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
     url: '/public/sites/{siteId}/subscribers/confirm',
     ...options,
     headers: {
@@ -53,9 +71,12 @@ export const confirmPublicSubscriber = <ThrowOnError extends boolean = false>(op
 });
 
 /**
+ * Unsubscribe from Lists
+ *
  * Unsubscribe from one or more specific lists using the unsubscribe token. Auto-marks subscriber as unsubscribed if no active subscriptions remain.
  */
 export const unsubscribeFromSpecificLists = <ThrowOnError extends boolean = false>(options: Options<UnsubscribeFromSpecificListsData, ThrowOnError>) => (options.client ?? client).post<UnsubscribeFromSpecificListsResponses, UnsubscribeFromSpecificListsErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
     url: '/public/sites/{siteId}/subscribers/unsubscribe',
     ...options,
     headers: {
@@ -65,31 +86,133 @@ export const unsubscribeFromSpecificLists = <ThrowOnError extends boolean = fals
 });
 
 /**
+ * Get Entities
+ *
  * Get public entities for a site. By default, only returns entities with permalinks on this site. Set hasPermalink=false to return all published entities in the organization.
  */
-export const getPublicEntities = <ThrowOnError extends boolean = false>(options: Options<GetPublicEntitiesData, ThrowOnError>) => (options.client ?? client).get<GetPublicEntitiesResponses, unknown, ThrowOnError>({ url: '/public/sites/{siteId}/entities', ...options });
+export const getPublicEntities = <ThrowOnError extends boolean = false>(options: Options<GetPublicEntitiesData, ThrowOnError>) => (options.client ?? client).get<GetPublicEntitiesResponses, unknown, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/entities',
+    ...options
+});
 
 /**
+ * Get Articles
+ *
  * Get public articles for a site. By default, only returns articles with permalinks on this site. Set hasPermalink=false to return all published articles in the organization.
  */
-export const getPublicArticles = <ThrowOnError extends boolean = false>(options: Options<GetPublicArticlesData, ThrowOnError>) => (options.client ?? client).get<GetPublicArticlesResponses, unknown, ThrowOnError>({ url: '/public/sites/{siteId}/articles', ...options });
+export const getPublicArticles = <ThrowOnError extends boolean = false>(options: Options<GetPublicArticlesData, ThrowOnError>) => (options.client ?? client).get<GetPublicArticlesResponses, unknown, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/articles',
+    ...options
+});
 
 /**
+ * Get Categories
+ *
  * Get all categories for a site with pagination support
  */
-export const getPublicCategories = <ThrowOnError extends boolean = false>(options: Options<GetPublicCategoriesData, ThrowOnError>) => (options.client ?? client).get<GetPublicCategoriesResponses, unknown, ThrowOnError>({ url: '/public/sites/{siteId}/categories', ...options });
+export const getPublicCategories = <ThrowOnError extends boolean = false>(options: Options<GetPublicCategoriesData, ThrowOnError>) => (options.client ?? client).get<GetPublicCategoriesResponses, unknown, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/categories',
+    ...options
+});
 
 /**
- * Get a public entity by its slug
+ * Get Page by ID
+ *
+ * Get a public page by its ID.
  */
-export const getPublicEntityBySlug = <ThrowOnError extends boolean = false>(options: Options<GetPublicEntityBySlugData, ThrowOnError>) => (options.client ?? client).get<GetPublicEntityBySlugResponses, GetPublicEntityBySlugErrors, ThrowOnError>({ url: '/public/sites/{siteId}/entities/slug/{slug}', ...options });
+export const getPublicPageById = <ThrowOnError extends boolean = false>(options: Options<GetPublicPageByIdData, ThrowOnError>) => (options.client ?? client).get<GetPublicPageByIdResponses, GetPublicPageByIdErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/pages/{id}',
+    ...options
+});
 
 /**
- * Get a public article by its slug
+ * Get Page by Slug
+ *
+ * Get a public page by its slug.
  */
-export const getPublicArticleBySlug = <ThrowOnError extends boolean = false>(options: Options<GetPublicArticleBySlugData, ThrowOnError>) => (options.client ?? client).get<GetPublicArticleBySlugResponses, GetPublicArticleBySlugErrors, ThrowOnError>({ url: '/public/sites/{siteId}/articles/slug/{slug}', ...options });
+export const getPublicPageBySlug = <ThrowOnError extends boolean = false>(options: Options<GetPublicPageBySlugData, ThrowOnError>) => (options.client ?? client).get<GetPublicPageBySlugResponses, GetPublicPageBySlugErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/pages/slug/{slug}',
+    ...options
+});
 
 /**
- * Resolve a permalink path to its resource (article, page, entity, category, or collection) for a specific site. Requires a public API key scoped to a site.
+ * Get Permalink by Path
+ *
+ * Get a permalink by path
  */
-export const resolvePublicPermalink = <ThrowOnError extends boolean = false>(options: Options<ResolvePublicPermalinkData, ThrowOnError>) => (options.client ?? client).get<ResolvePublicPermalinkResponses, ResolvePublicPermalinkErrors, ThrowOnError>({ url: '/public/sites/{siteId}/permalinks/path', ...options });
+export const getPermalinkByPath = <ThrowOnError extends boolean = false>(options: Options<GetPermalinkByPathData, ThrowOnError>) => (options.client ?? client).get<GetPermalinkByPathResponses, GetPermalinkByPathErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/permalinks',
+    ...options
+});
+
+/**
+ * Get Entity by ID
+ *
+ * Get a public entity by its ID.
+ */
+export const getPublicEntityById = <ThrowOnError extends boolean = false>(options: Options<GetPublicEntityByIdData, ThrowOnError>) => (options.client ?? client).get<GetPublicEntityByIdResponses, GetPublicEntityByIdErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/entities/{id}',
+    ...options
+});
+
+/**
+ * Get Entity by Slug
+ *
+ * Get a public entity by its slug.
+ */
+export const getPublicEntityBySlug = <ThrowOnError extends boolean = false>(options: Options<GetPublicEntityBySlugData, ThrowOnError>) => (options.client ?? client).get<GetPublicEntityBySlugResponses, GetPublicEntityBySlugErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/entities/slug/{slug}',
+    ...options
+});
+
+/**
+ * Get Article by ID
+ *
+ * Get a public article by its ID.
+ */
+export const getPublicArticleById = <ThrowOnError extends boolean = false>(options: Options<GetPublicArticleByIdData, ThrowOnError>) => (options.client ?? client).get<GetPublicArticleByIdResponses, GetPublicArticleByIdErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/articles/{id}',
+    ...options
+});
+
+/**
+ * Get Article by Slug
+ *
+ * Get a public article by its slug.
+ */
+export const getPublicArticleBySlug = <ThrowOnError extends boolean = false>(options: Options<GetPublicArticleBySlugData, ThrowOnError>) => (options.client ?? client).get<GetPublicArticleBySlugResponses, GetPublicArticleBySlugErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/articles/slug/{slug}',
+    ...options
+});
+
+/**
+ * Resolve Permalink
+ *
+ * Resolve a permalink path to its resource (article, page, entity, category, or collection) for a specific site.
+ */
+export const resolvePublicPermalink = <ThrowOnError extends boolean = false>(options: Options<ResolvePublicPermalinkData, ThrowOnError>) => (options.client ?? client).get<ResolvePublicPermalinkResponses, ResolvePublicPermalinkErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/permalinks/path',
+    ...options
+});
+
+/**
+ * Preview Resource
+ *
+ * Preview an unpublished resource (article, page, or entity) using a preview token.
+ */
+export const previewResource = <ThrowOnError extends boolean = false>(options: Options<PreviewResourceData, ThrowOnError>) => (options.client ?? client).get<PreviewResourceResponses, PreviewResourceErrors, ThrowOnError>({
+    security: [{ name: 'x-api-key', type: 'apiKey' }],
+    url: '/public/sites/{siteId}/preview/{token}',
+    ...options
+});

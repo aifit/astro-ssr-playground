@@ -120,6 +120,24 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
         }
       }
     }
+  } else if (node.type === "entityEmbed") {
+    const entityName = String(node.attrs?.entityName || "");
+    const entityType = String(node.attrs?.entityType || "");
+
+    html += `<div class="border border-gray-300 my-5 bg-gray-100 rounded">`;
+    html += `<div class="grid grid-cols-[70%_30%] text-sm uppercase text-gray-700 m-0 border-b border-gray-300 p-4 leading-none">`;
+    html += `<div class="text-left">${entityName}</div>`;
+    html += `<div class="text-right">${entityType}</div>`;
+    html += `</div>`;
+
+    html += `<div class="p-4 bg-gray-50 space-y-4">`;
+    if (node.content) {
+      for (const child of node.content) {
+        html += renderNode(child)
+      }
+    }
+    html += `</div>`;
+    html += `</div>`
   }
 
   return html;
