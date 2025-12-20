@@ -16,8 +16,8 @@ const limit = 4;
 const offset = (page - 1) * limit;
 
 // Fetch categories
-const categoriesResponse = await minima.getPublicCategories();
-const categories = categoriesResponse.data?.data || [];
+const {data: siteData}= await minima.getPublicSite();
+const categories = siteData?.categories || [];
 
 // Fetch articles
 const response = await minima.getPublicArticles({ limit, offset });
