@@ -20,7 +20,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<p>";
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child, images);
+        html += renderNode(child);
       }
     }
     html += "</p>";
@@ -46,7 +46,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += `<h${level}>`;
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child, images);
+        html += renderNode(child);
       }
     }
     html += `</h${level}>`;
@@ -54,7 +54,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<ul>";
     if (node.content) {
       for (const item of node.content) {
-        html += renderNode(item, images);
+        html += renderNode(item);
       }
     }
     html += "</ul>";
@@ -62,7 +62,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<ol>";
     if (node.content) {
       for (const item of node.content) {
-        html += renderNode(item, images);
+        html += renderNode(item);
       }
     }
     html += "</ol>";
@@ -70,7 +70,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<li>";
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child, images);
+        html += renderNode(child);
       }
     }
     html += "</li>";
@@ -78,7 +78,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<blockquote>";
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child, images);
+        html += renderNode(child);
       }
     }
     html += "</blockquote>";
