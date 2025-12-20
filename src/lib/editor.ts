@@ -1,6 +1,6 @@
 import type { TiptapSchema, TiptapNode, PublicImage } from "../sdk/types.gen";
 import { CDN_BASE_URL } from "./constants";
-import { escapeHtml, escapeAttribute } from "../lib/sanitize.ts"
+import { escapeHtml, escapeAttribute } from "../lib/sanitize"
 
 // Render Tiptap JSON content to HTML
 export function renderTiptapContent(content: TiptapSchema, images: PublicImage[] = []): string {
