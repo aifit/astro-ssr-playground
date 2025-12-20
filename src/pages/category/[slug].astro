@@ -31,8 +31,8 @@ const categoryName =
     ? articles[0].categories.find((cat) => cat.slug === slug)?.name || slug
     : slug;
 
-const categoriesResponse = await minima.getPublicCategories();
-const categories = categoriesResponse.data?.data || [];
+const {data: siteData}= await minima.getPublicSite();
+const categories = siteData?.categories || [];
 
 const title = await buildTitle(categoryName);
 const description = `Articles in ${categoryName} category`;
