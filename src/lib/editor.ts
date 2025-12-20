@@ -1,5 +1,6 @@
 import type { TiptapSchema, TiptapNode, PublicImage } from "../sdk/types.gen";
 import { CDN_BASE_URL } from "./constants";
+import { escapeHtml, escapeAttribute } from "../lib/sanitize.ts"
 
 // Render Tiptap JSON content to HTML
 export function renderTiptapContent(content: TiptapSchema, images: PublicImage[] = []): string {
@@ -19,21 +20,23 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<p>";
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child);
+        html += renderNode(child, images);
       }
     }
     html += "</p>";
   } else if (node.type === "text") {
-    // TextNode has text and marks properties
+    // Text content
     const textNode = node as Extract<TiptapNode, { type: "text" }>;
-    let text = textNode.text || "";
+    let text = escapeHtml(textNode.text || "");
 
     if (textNode.marks) {
       for (const mark of textNode.marks) {
         if (mark.type === "bold") text = `<strong>${text}</strong>`;
         if (mark.type === "italic") text = `<em>${text}</em>`;
         if (mark.type === "link" && mark.attrs && "href" in mark.attrs) {
-          text = `<a href="${mark.attrs.href}">${text}</a>`;
+          // Link href attribute
+          const href = escapeAttribute(String(mark.attrs.href || ""));
+          text = `<a href="${href}">${text}</a>`;
         }
       }
     }
@@ -43,7 +46,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += `<h${level}>`;
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child);
+        html += renderNode(child, images);
       }
     }
     html += `</h${level}>`;
@@ -51,7 +54,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<ul>";
     if (node.content) {
       for (const item of node.content) {
-        html += renderNode(item);
+        html += renderNode(item, images);
       }
     }
     html += "</ul>";
@@ -59,7 +62,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<ol>";
     if (node.content) {
       for (const item of node.content) {
-        html += renderNode(item);
+        html += renderNode(item, images);
       }
     }
     html += "</ol>";
@@ -67,7 +70,7 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<li>";
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child);
+        html += renderNode(child, images);
       }
     }
     html += "</li>";
@@ -75,26 +78,29 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += "<blockquote>";
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child);
+        html += renderNode(child, images);
       }
     }
     html += "</blockquote>";
   } else if (node.type === "pullQuote") {
-    const text = String(node.attrs?.text || "");
-    const attribution = String(node.attrs?.attribution || "");
+    // Quote text and attribution
+    const text = escapeHtml(String(node.attrs?.text || ""));
+    const attribution = escapeHtml(String(node.attrs?.attribution || ""));
     html += `<blockquote><p>${text}</p>`;
     if (attribution) {
       html += `<footer>— <cite>${attribution}</cite></footer>`;
     }
     html += "</blockquote>";
   } else if (node.type === "codeBlock") {
-    const language = String(node.attrs?.language || "");
+    // Language class and code content
+    const language = escapeAttribute(String(node.attrs?.language || ""));
     html += `<pre><code class="${language}">`;
     if (node.content) {
       for (const child of node.content) {
         if (child.type === "text") {
           const textNode = child as Extract<TiptapNode, { type: "text" }>;
-          html += textNode.text;
+          // Code block text
+          html += escapeHtml(textNode.text || "");
         }
       }
     }
@@ -102,27 +108,32 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
   } else if (node.type === "imageNode") {
     const imageId = String(node.attrs?.["data-id"] || "");
 
-    // Find matching image from images array by ID (following Minima's pattern)
+    // Find matching image from images array by ID
     if (imageId && images.length > 0) {
       const image = images.find((img) => img.id === imageId);
       if (image) {
-        const src = `${CDN_BASE_URL}/${image.path}`;
-        const alt = image.caption || "";
-        const caption = image.caption;
+        // Image path, alt text, and caption
+        const path = escapeAttribute(image.path);
+        const src = `${CDN_BASE_URL}/${path}`;
+        const alt = escapeAttribute(image.caption || "");
+        const caption = escapeHtml(image.caption || "");
+        const width = Number(image.width) || 0;
+        const height = Number(image.height) || 0;
 
         if (caption) {
           html += `<figure>`;
-          html += `<img src="${src}" alt="${alt}" width="${image.width}" height="${image.height}" />`;
+          html += `<img src="${src}" alt="${alt}" width="${width}" height="${height}" />`;
           html += `<figcaption class="text-center text-sm text-gray-500 mt-2">${caption}</figcaption>`;
           html += `</figure>`;
         } else {
-          html += `<img src="${src}" alt="${alt}" width="${image.width}" height="${image.height}" />`;
+          html += `<img src="${src}" alt="${alt}" width="${width}" height="${height}" />`;
         }
       }
     }
   } else if (node.type === "entityEmbed") {
-    const entityName = String(node.attrs?.entityName || "");
-    const entityType = String(node.attrs?.entityType || "");
+    // Entity name and type
+    const entityName = escapeHtml(String(node.attrs?.entityName || ""));
+    const entityType = escapeHtml(String(node.attrs?.entityType || ""));
 
     html += `<div class="border border-gray-300 my-5 bg-gray-100 rounded">`;
     html += `<div class="grid grid-cols-[70%_30%] text-sm uppercase text-gray-700 m-0 border-b border-gray-300 p-4 leading-none">`;
@@ -133,11 +144,11 @@ function renderNode(node: TiptapNode, images: PublicImage[] = []): string {
     html += `<div class="p-4 bg-gray-50 space-y-4">`;
     if (node.content) {
       for (const child of node.content) {
-        html += renderNode(child)
+        html += renderNode(child, images);
       }
     }
     html += `</div>`;
-    html += `</div>`
+    html += `</div>`;
   }
 
   return html;
