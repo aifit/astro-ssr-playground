@@ -1,4 +1,4 @@
-import type { PublicArticle, PublicEntity, PublicSiteCategory, PublicTag } from "../sdk/types.gen";
+import type { PublicArticle, GraphEntity, PublicSiteCategory, PublicTag } from "../sdk/types.gen";
 
 /**
  * Get article URL from article slug
@@ -10,7 +10,7 @@ export function getArticleUrl(article: PublicArticle): string {
 /**
  * Get project URL from entity slug
  */
-export function getProjectUrl(project: PublicEntity): string {
+export function getProjectUrl(project: GraphEntity): string {
   return `/projects/${project.slug}`;
 }
 

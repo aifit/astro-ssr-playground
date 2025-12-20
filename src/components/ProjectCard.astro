@@ -1,10 +1,11 @@
 ---
-import type { PublicEntity, PublicImage } from "../sdk/types.gen";
+import type { PublicImage, GraphEntity } from "../sdk/types.gen";
 import HeroImage from "./HeroImage.astro";
 import { getProjectUrl } from "../lib/url";
 
-type ProjectWithAttributes = PublicEntity & {
-  attributes?: Record<string, any>;
+type ProjectWithAttributes = {
+  name: string;
+  attributes?: GraphEntity['attributes'];
   heroImage?: PublicImage;
 };
 

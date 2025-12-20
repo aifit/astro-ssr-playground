@@ -1,22 +1,24 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { minima } from "../../lib/minima";
-import type { PublicEntity, PublicImage } from "../../sdk/types.gen";
+import type { PublicImage, GraphEntity } from "../../sdk/types.gen";
 import { buildTitle } from "../../config/site";
 import HeroImage from "../../components/HeroImage.astro";
 import ProjectRelationships from "../../components/ProjectRelationships.astro";
 import { getProjectUrl } from "../../lib/url";
 
-type EntityWithAttributes = PublicEntity & {
-  attributes?: Record<string, any>;
+type ProjectWithAttributes = {
+  name: string;
+  attributes?: GraphEntity['attributes'];
   heroImage?: PublicImage;
-  type?: PublicEntity;
+  type: string;
+  externalUrl?: GraphEntity['externalUrl'];
 };
 
 const { slug } = Astro.params;
 
 const response = await minima.getPublicEntityBySlug(slug!);
-const project = response.data as EntityWithAttributes | undefined;
+const project = response.data as ProjectWithAttributes | undefined;
 
 if (!project) {
   return Astro.redirect("/404");
