@@ -1,4 +1,4 @@
-// ✅ HTML Escape
+// HTML Escape
 export function escapeHtml(text: string): string {
   const map: Record<string, string> = {
     '&': '&amp;',
@@ -10,7 +10,7 @@ export function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, (m) => map[m]);
 }
 
-// ✅ Escape for HTML attributes (href, src, class, etc)
+// Escape for HTML attributes (href, src, class, etc)
 export function escapeAttribute(text: string): string {
   return text.replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
