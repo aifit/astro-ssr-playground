@@ -9,7 +9,7 @@ import ArticleRelationships from "../../components/ArticleRelationships.astro";
 import { buildTitle } from "../../config/site";
 
 // Get slug from URL params
-const { slug } = Astro.params;
+const slug = Astro.params.slug as string;
 
 // Fetch article by slug
 const response = await minima.getPublicArticleBySlug(slug!);

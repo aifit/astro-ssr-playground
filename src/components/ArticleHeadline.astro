@@ -4,7 +4,7 @@ import ArticleAuthor from "./ArticleAuthor.astro";
 import { getArticleUrl } from "../lib/url";
 import HeroImage from "./HeroImage.astro";
 
-interface Props {
+type Props = {
   article: PublicArticle;
 }
 
@@ -16,13 +16,13 @@ const excerpt = article.description || article.subHeadline || "";
 <div>
   {
     article.heroImage && (
-      <a href={getArticleUrl(article)}>
+      <a href={getArticleUrl(article.slug)}>
         <HeroImage image={article.heroImage} alt={article.headline} />
       </a>
     )
   }
   <h1 class="text-2xl font-medium m-0 mb-6 mt-6">
-    <a href={getArticleUrl(article)}>{article.headline}</a>
+    <a href={getArticleUrl(article.slug)}>{article.headline}</a>
   </h1>
   <ArticleAuthor author={article.author} publishedAt={article.publishedAt} />
   {

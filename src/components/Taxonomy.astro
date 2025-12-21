@@ -20,7 +20,7 @@ const { items, label } = Astro.props as Props;
     {
       items.map((item) => (
         <a
-          href={getCategoryUrl(item)}
+          href={getCategoryUrl(item.slug)}
           class="mr-2 text-blue-600 hover:underline inline-block px-1"
         >
           {item.name}

@@ -1,14 +1,14 @@
 ---
-import type { PublicArticle, PublicEntity } from "../sdk/types.gen";
+import type { PublicArticle } from "../sdk/types.gen";
 import { formatDate } from "../lib/date";
 import { getArticleUrl } from "../lib/url";
 
-interface Props {
-  project: PublicEntity;
+type Props = {
+  projectId: string;
   articles: PublicArticle[];
 }
 
-const { project, articles } = Astro.props;
+const { projectId, articles } = Astro.props;
 
 const reviews: PublicArticle[] = [];
 const aboutArticles: PublicArticle[] = [];
@@ -22,7 +22,7 @@ for (const article of articles) {
     const entities = rels.itemReviewed.flatMap((r) =>
       Array.isArray(r.entity) ? r.entity : [r.entity]
     );
-    if (entities.some((e) => e.id === project.id)) {
+    if (entities.some((e) => e.id === projectId)) {
       reviews.push(article);
       continue;
     }
@@ -33,7 +33,7 @@ for (const article of articles) {
     const entities = rels.about.flatMap((r) =>
       Array.isArray(r.entity) ? r.entity : [r.entity]
     );
-    if (entities.some((e) => e.id === project.id)) {
+    if (entities.some((e) => e.id === projectId)) {
       aboutArticles.push(article);
       continue;
     }
@@ -44,7 +44,7 @@ for (const article of articles) {
     const entities = rels.mentions.flatMap((r) =>
       Array.isArray(r.entity) ? r.entity : [r.entity]
     );
-    if (entities.some((e) => e.id === project.id)) {
+    if (entities.some((e) => e.id === projectId)) {
       mentions.push(article);
     }
   }
@@ -60,7 +60,7 @@ for (const article of articles) {
           <div class="border-l-2 border-blue-600 pl-4">
             <h4 class="font-medium m-0 mb-0">
               <a
-                href={getArticleUrl(article)}
+                href={getArticleUrl(article.slug)}
                 class="text-blue-600 hover:underline"
               >
                 {article.headline}
@@ -88,7 +88,7 @@ for (const article of articles) {
           <div class="border-l-2 border-green-600 pl-4">
             <h4 class="font-medium m-0 mb-0">
               <a
-                href={getArticleUrl(article)}
+                href={getArticleUrl(article.slug)}
                 class="text-blue-600 hover:underline"
               >
                 {article.headline}
@@ -118,7 +118,7 @@ for (const article of articles) {
           <div class="border-l-2 border-gray-400 pl-4">
             <h4 class="font-medium m-0 mb-0">
               <a
-                href={getArticleUrl(article)}
+                href={getArticleUrl(article.slug)}
                 class="text-blue-600 hover:underline"
               >
                 {article.headline}

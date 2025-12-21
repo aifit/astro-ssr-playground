@@ -5,14 +5,16 @@ import { minima } from "../../lib/minima";
 import { buildTitle } from "../../config/site";
 import ArticleCard from "../../components/ArticleCard.astro";
 import Taxonomy from "../../components/Taxonomy.astro";
+import { getCategoryUrl } from "../../lib/url";
 
 // Get category slug from URL params
-const { slug } = Astro.params;
+const slug = Astro.params.slug as string;
+const basePath = getCategoryUrl(slug);
 
 // Get pagination parameters from URL
 const url = new URL(Astro.request.url);
 const page = parseInt(url.searchParams.get("page") || "1");
-const limit = 4;
+const limit = 1;
 const offset = (page - 1) * limit;
 
 // Fetch articles by category
@@ -66,7 +68,7 @@ const description = `Articles in ${categoryName} category`;
       <div class="max-w-4xl mx-auto bg-white p-4 rounded shadow border border-sky-600 mt-4">
         <ArchivePagination
           pagination={pagination}
-          basePath={`/category/${slug}`}
+          basePath={basePath}
           itemLabel="articles"
         />
       </div>
