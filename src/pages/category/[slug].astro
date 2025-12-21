@@ -14,7 +14,7 @@ const basePath = getCategoryUrl(slug);
 // Get pagination parameters from URL
 const url = new URL(Astro.request.url);
 const page = parseInt(url.searchParams.get("page") || "1");
-const limit = 1;
+const limit = 4;
 const offset = (page - 1) * limit;
 
 // Fetch articles by category
