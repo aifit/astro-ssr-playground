@@ -1,22 +1,16 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { minima } from "../../lib/minima";
-import type { PublicEntity, PublicImage } from "../../sdk/types.gen";
+import type { GraphEntity } from "../../sdk/types.gen";
 import { buildTitle } from "../../config/site";
 import HeroImage from "../../components/HeroImage.astro";
 import ProjectRelationships from "../../components/ProjectRelationships.astro";
 import { getProjectUrl } from "../../lib/url";
 
-type EntityWithAttributes = PublicEntity & {
-  attributes?: Record<string, any>;
-  heroImage?: PublicImage;
-  type?: PublicEntity;
-};
-
 const { slug } = Astro.params;
 
 const response = await minima.getPublicEntityBySlug(slug!);
-const project = response.data as EntityWithAttributes | undefined;
+const project = response.data as GraphEntity | undefined;
 
 if (!project) {
   return Astro.redirect("/404");
@@ -54,7 +48,7 @@ const description = (project as any).attributes?.description || "";
         )
       }
       <h1 class="text-2xl font-medium m-0 mb-6">
-        <a href={getProjectUrl(project)}>{project.name}</a>
+        <a href={getProjectUrl(project.slug)}>{project.name}</a>
       </h1>
 
       {
@@ -141,7 +135,7 @@ const description = (project as any).attributes?.description || "";
         }
       </div>
 
-      <ProjectRelationships project={project} articles={allArticles} />
+      <ProjectRelationships projectId={project.id} articles={allArticles} />
     </main>
   </article>
 </BaseLayout>

@@ -1,15 +1,10 @@
 ---
-import type { PublicEntity, PublicImage } from "../sdk/types.gen";
+import type { GraphEntity } from "../sdk/types.gen";
 import HeroImage from "./HeroImage.astro";
 import { getProjectUrl } from "../lib/url";
 
-type ProjectWithAttributes = PublicEntity & {
-  attributes?: Record<string, any>;
-  heroImage?: PublicImage;
-};
-
-interface Props {
-  project: ProjectWithAttributes;
+type Props = {
+  project: Pick<GraphEntity, 'name' | 'slug' | 'attributes' | 'heroImage'>;
 }
 
 const { project } = Astro.props;
@@ -18,14 +13,14 @@ const { project } = Astro.props;
 <article class="bg-white rounded shadow border border-sky-600">
   {
     project.heroImage && (
-      <a href={getProjectUrl(project)}>
+      <a href={getProjectUrl(project.slug)}>
         <HeroImage image={project.heroImage} alt={project.name} />
       </a>
     )
   }
   <div class="p-4">
     <h2 class="text-2xl font-medium m-0 mb-2">
-      <a href={getProjectUrl(project)}>{project.name}</a>
+      <a href={getProjectUrl(project.slug)}>{project.name}</a>
     </h2>
     {
       project.attributes?.category && (

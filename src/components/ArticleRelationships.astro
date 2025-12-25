@@ -1,24 +1,17 @@
 ---
 import type {
   PublicArticleRelationships,
-  PublicEntity,
+  GraphEntity
 } from "../sdk/types.gen";
 import { getProjectUrl } from "../lib/url";
 
-interface Props {
+type ProjectWithAttributes = Pick<GraphEntity, 'name' | 'slug' | 'attributes' >
+
+type Props = {
   relationships: PublicArticleRelationships;
 }
 
 const { relationships } = Astro.props;
-
-// Helper type for project with attributes
-interface ProjectWithAttributes extends PublicEntity {
-  attributes?: {
-    category?: string;
-    description?: string;
-    [key: string]: any;
-  };
-}
 
 // Extract and filter projects from relationships
 const aboutProjects: ProjectWithAttributes[] = [];
@@ -73,7 +66,7 @@ if (relationships?.mentions) {
           <div>
             <h2 class="text-xl font-medium m-0 mb-2">
               <a
-                href={getProjectUrl(project)}
+                href={getProjectUrl(project.slug)}
                 class="text-blue-600 hover:underline"
               >
                 {project.name}
@@ -107,7 +100,7 @@ if (relationships?.mentions) {
           <div>
             <h2 class="text-xl font-medium m-0 mb-2">
               <a
-                href={getProjectUrl(project)}
+                href={getProjectUrl(project.slug)}
                 class="text-blue-600 hover:underline"
               >
                 {project.name}
@@ -141,7 +134,7 @@ if (relationships?.mentions) {
           <div>
             <h2 class="text-xl font-medium m-0 mb-2">
               <a
-                href={getProjectUrl(project)}
+                href={getProjectUrl(project.slug)}
                 class="text-blue-600 hover:underline"
               >
                 {project.name}

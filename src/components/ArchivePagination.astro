@@ -1,8 +1,8 @@
 ---
-import type { PaginationMeta } from "../sdk/types.gen";
+import type { PublicPaginationMeta } from "../sdk/types.gen";
 
-interface Props {
-  pagination: PaginationMeta;
+type Props = {
+  pagination: PublicPaginationMeta;
   basePath: string;
   itemLabel: string;
 }

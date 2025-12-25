@@ -9,11 +9,11 @@ const title = await getSiteName();
 const description =
   "This is a small playground for exploring Astro with Server Side Rendering using Minima CMS.";
 
-// Fetch articles (limit to 4 for homepage)
+// Fetch articles (limit to 2 for homepage)
 const response = await minima.getPublicArticles({ limit: 2 });
 const articles = response.data?.data || [];
 
-// Fetch projects (limit to 4 for homepage)
+// Fetch projects (limit to 2 for homepage)
 const projectsResponse = await minima.getPublicEntities({ limit: 2 });
 const projects = projectsResponse.data?.data || [];
 ---

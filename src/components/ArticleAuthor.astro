@@ -2,7 +2,8 @@
 import type { PublicUser } from "../sdk/types.gen";
 import { getImageUrl } from "../lib/image";
 import { formatDate } from "../lib/date";
-interface Props {
+
+type Props = {
   author: PublicUser;
   publishedAt?: number;
 }

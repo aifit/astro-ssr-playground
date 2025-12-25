@@ -92,125 +92,6 @@ export type PublicMenuItem = {
 };
 
 /**
- * Public Entity
- */
-export type PublicEntity = {
-    id: string;
-    externalUrl?: string;
-    name: string;
-    permalink: {
-        path: string;
-        site: {
-            domain: string;
-        };
-    };
-    publishedAt: number;
-    slug: string;
-    status: 'published';
-};
-
-/**
- * Meta information for paginated responses
- */
-export type PaginationMeta = {
-    total: number;
-    limit: number;
-    offset: number;
-    page: number;
-    totalPages: number;
-};
-
-/**
- * Published Article
- */
-export type PublicArticle = {
-    id: string;
-    attributes?: PublicArticleAttributes;
-    author: PublicUser;
-    body: TiptapSchema;
-    categories: Array<PublicSiteCategory>;
-    description?: string;
-    headline: string;
-    heroImage?: PublicImage;
-    images: Array<PublicImage>;
-    permalink: {
-        path: string;
-    };
-    publishedAt: number;
-    relationships: PublicArticleRelationships;
-    schema: {
-        [key: string]: unknown;
-    };
-    slug: string;
-    subHeadline?: string;
-    tags: Array<PublicTag>;
-    type: 'Article' | 'NewsArticle';
-};
-
-/**
- * Article Attributes
- */
-export type PublicArticleAttributes = {
-    reviewScore?: {
-        value: number;
-        ratingSystem: {
-            display: 'stars' | 'percentage' | 'numbers';
-            precision: 'integer' | 'decimal';
-            maxRating: number;
-            minRating: number;
-            step?: number;
-        };
-    };
-};
-
-/**
- * Public User
- */
-export type PublicUser = {
-    avatar?: PublicImage;
-    id: string;
-    name: string;
-};
-
-/**
- * Published Image
- */
-export type PublicImage = {
-    id: string;
-    attributes: ImageAttributes;
-    contentType: string;
-    path: string;
-    height: number;
-    width: number;
-    caption?: string; // TODO: ask Minima to add this
-};
-
-export type ImageAttributes = {
-    caption?: string;
-    credit?: string;
-    representationType?: RepresentationTypeValue;
-    viewpoint?: ViewpointValue;
-    abstract?: string;
-    award?: Array<string>;
-    copyrightNotice?: string;
-    copyrightYear?: string;
-    creditText?: string;
-    dateCreated?: Array<string>;
-    dateModified?: string;
-    datePublished?: string;
-    genre?: Array<string>;
-    isAccessibleForFree?: string;
-    isFamilyFriendly?: boolean;
-    isPartOf?: Array<string>;
-    text?: Array<string>;
-    version?: Array<string>;
-};
-
-export type RepresentationTypeValue = 'representationType' | 'lifestyle' | 'product' | 'technical' | 'illustration' | 'render' | 'portrait';
-
-export type ViewpointValue = 'viewpoint' | 'front' | 'left-side' | 'right-side' | 'angled' | 'top' | 'bottom' | 'back';
-
-/**
  * Tiptap Document
  */
 export type TiptapSchema = DocumentNode;
@@ -252,6 +133,8 @@ export type TiptapNode = ({
 } & YouTubeNode) | ({
     type: 'pullQuote';
 } & PullQuoteNode) | ({
+    type: 'entityEmbed';
+} & EntityEmbedNode) | ({
     type: 'text';
 } & TextNode);
 
@@ -416,18 +299,57 @@ export type PullQuoteNode = {
 };
 
 /**
- * Public Article Relationships
+ * Entity Embed Node - embeds an entity inline within the document
  */
-export type PublicArticleRelationships = {
-    itemReviewed?: Array<{
-        entity: Array<PublicEntity>;
-    }>;
-    about?: Array<{
-        entity: Array<PublicEntity>;
-    }>;
-    mentions?: Array<{
-        entity: Array<PublicEntity>;
-    }>;
+export type EntityEmbedNode = {
+    type: 'entityEmbed';
+    attrs?: {
+        /**
+         * The ID of the embedded entity
+         */
+        entityId: string;
+        /**
+         * The name of the embedded entity
+         */
+        entityName?: string;
+        /**
+         * The type of the embedded entity
+         */
+        entityType?: string;
+        [key: string]: unknown | string | undefined;
+    };
+    content?: Array<TiptapNode>;
+};
+
+/**
+ * Published Category
+ */
+export type PublicCategory = {
+    id: string;
+    name: string;
+    slug: string;
+    parent?: {
+        id: string;
+        name: string;
+        slug: string;
+    };
+};
+
+/**
+ * Published Image
+ */
+export type PublicImage = {
+    id: string;
+    attributes?: {
+        [key: string]: never;
+    };
+    caption?: string;
+    credit?: string;
+    contentType: string;
+    path: string;
+    height: number;
+    width: number;
+    tags: Array<PublicTag>;
 };
 
 /**
@@ -436,6 +358,184 @@ export type PublicArticleRelationships = {
 export type PublicTag = {
     name: string;
     slug: string;
+};
+
+/**
+ * Meta information for paginated responses
+ */
+export type PublicPaginationMeta = {
+    total: number;
+    limit: number;
+    offset: number;
+    page: number;
+    totalPages: number;
+};
+
+/**
+ * Published Article
+ */
+export type PublicArticle = {
+    id: string;
+    attributes?: PublicArticleAttributes;
+    author: PublicUser;
+    body: TiptapSchema;
+    categories: Array<PublicSiteCategory>;
+    description?: string;
+    /**
+     * Resolved entity graph
+     */
+    graph?: Graph;
+    headline: string;
+    heroImage?: PublicImage;
+    images: Array<PublicImage>;
+    permalink: {
+        path: string;
+    };
+    publishedAt: number;
+    relationships: PublicArticleRelationships;
+    schema: {
+        [key: string]: unknown;
+    };
+    slug: string;
+    subHeadline?: string;
+    tags: Array<PublicTag>;
+    type: 'Article' | 'NewsArticle';
+};
+
+/**
+ * Article Attributes
+ */
+export type PublicArticleAttributes = {
+    reviewScore?: {
+        value: number;
+        ratingSystem: {
+            display: 'stars' | 'percentage' | 'numbers';
+            precision: 'integer' | 'decimal';
+            maxRating: number;
+            minRating: number;
+            step?: number;
+        };
+    };
+};
+
+/**
+ * Public User
+ */
+export type PublicUser = {
+    avatar?: PublicImage;
+    id: string;
+    name: string;
+};
+
+/**
+ * Array of resolved entities with their relationships traversed to the requested depth
+ */
+export type Graph = Array<GraphEntity>;
+
+/**
+ * Resolved graph entity with nested relationships
+ */
+export type GraphEntity = {
+    id: string;
+    body?: TiptapSchema;
+    categories?: Array<PublicCategory>;
+    externalUrl?: string;
+    heroImage?: PublicImage;
+    images?: Array<PublicImage>;
+    name: string;
+    permalink: {
+        path: string;
+        site: {
+            domain: string;
+        };
+    };
+    publishedAt: number;
+    slug: string;
+    status: 'published';
+    type: string;
+    attributes?: {
+        [key: string]: unknown;
+    };
+    /**
+     * Related entities grouped by relationship type
+     */
+    relationships: {
+        [key: string]: {
+            type: string;
+            label: string;
+            entity: GraphEntity;
+        } | Array<{
+            type: string;
+            label: string;
+            entity: GraphEntity;
+        }>;
+    };
+};
+
+/**
+ * Public Article Relationships
+ */
+export type PublicArticleRelationships = {
+    itemReviewed?: Array<{
+        entity: Array<{
+            id: string;
+            body?: TiptapSchema;
+            categories?: Array<PublicCategory>;
+            externalUrl?: string;
+            heroImage?: PublicImage;
+            images?: Array<PublicImage>;
+            name: string;
+            permalink: {
+                path: string;
+                site: {
+                    domain: string;
+                };
+            };
+            publishedAt: number;
+            slug: string;
+            status: 'published';
+        }>;
+    }>;
+    about?: Array<{
+        entity: Array<{
+            id: string;
+            body?: TiptapSchema;
+            categories?: Array<PublicCategory>;
+            externalUrl?: string;
+            heroImage?: PublicImage;
+            images?: Array<PublicImage>;
+            name: string;
+            permalink: {
+                path: string;
+                site: {
+                    domain: string;
+                };
+            };
+            publishedAt: number;
+            slug: string;
+            status: 'published';
+        }>;
+    }>;
+    mentions?: Array<{
+        entity: Array<{
+            id: string;
+            body?: TiptapSchema;
+            categories?: Array<PublicCategory>;
+            externalUrl?: string;
+            heroImage?: PublicImage;
+            images?: Array<PublicImage>;
+            name: string;
+            permalink: {
+                path: string;
+                site: {
+                    domain: string;
+                };
+            };
+            publishedAt: number;
+            slug: string;
+            status: 'published';
+        }>;
+    }>;
 };
 
 /**
@@ -450,7 +550,36 @@ export type CategoryListResponse = {
             path: string;
         } | null;
     }>;
-    pagination: PaginationMeta;
+    pagination: PublicPaginationMeta;
+};
+
+/**
+ * Published Page
+ */
+export type PublicPage = {
+    id: string;
+    body: TiptapSchema;
+    headline: string;
+    permalink: {
+        path: string;
+    };
+    publishedAt: number;
+    slug: string;
+    type: 'AboutPage' | 'ContactPage' | 'WebPage';
+    updatedAt: number;
+};
+
+/**
+ * Permalink lookup response
+ */
+export type PermalinkLookupResponse = {
+    resourceType: 'article' | 'page' | 'entity' | 'category' | 'collection';
+    resourceId: string;
+} | {
+    resourceType: 'redirect';
+    redirectTo: {
+        path: string;
+    };
 };
 
 /**
@@ -479,26 +608,27 @@ export type PageResponse = {
 };
 
 /**
- * Published Page
- */
-export type PublicPage = {
-    id: string;
-    body: TiptapSchema;
-    headline: string;
-    permalink: {
-        path: string;
-    };
-    publishedAt: number;
-    slug: string;
-    type: 'AboutPage' | 'ContactPage' | 'WebPage';
-    updatedAt: number;
-};
-
-/**
  * Public Entity Response
  */
 export type PublicEntityResponse = {
-    entity: PublicEntity;
+    entity: {
+        id: string;
+        body?: TiptapSchema;
+        categories?: Array<PublicCategory>;
+        externalUrl?: string;
+        heroImage?: PublicImage;
+        images?: Array<PublicImage>;
+        name: string;
+        permalink: {
+            path: string;
+            site: {
+                domain: string;
+            };
+        };
+        publishedAt: number;
+        slug: string;
+        status: 'published';
+    };
     meta: {
         resourceType: 'entity';
     };
@@ -513,7 +643,7 @@ export type CategoryWithArticlesResponse = {
     };
     category: PublicSiteCategory;
     articles: Array<PublicArticle>;
-    pagination: PaginationMeta;
+    pagination: PublicPaginationMeta;
 };
 
 /**
@@ -568,6 +698,61 @@ export type RedirectResponse = {
     };
 };
 
+/**
+ * Preview Response - returns unpublished content
+ */
+export type PreviewResponse = PreviewArticleResponse | PreviewPageResponse | PreviewEntityResponse;
+
+/**
+ * Preview Article Response
+ */
+export type PreviewArticleResponse = {
+    article: PublicArticle;
+    meta: {
+        resourceType: 'article';
+        preview: true;
+    };
+};
+
+/**
+ * Preview Page Response
+ */
+export type PreviewPageResponse = {
+    page: PublicPage;
+    meta: {
+        resourceType: 'page';
+        preview: true;
+    };
+};
+
+/**
+ * Preview Entity Response
+ */
+export type PreviewEntityResponse = {
+    entity: {
+        id: string;
+        body?: TiptapSchema;
+        categories?: Array<PublicCategory>;
+        externalUrl?: string;
+        heroImage?: PublicImage;
+        images?: Array<PublicImage>;
+        name: string;
+        permalink: {
+            path: string;
+            site: {
+                domain: string;
+            };
+        };
+        publishedAt: number;
+        slug: string;
+        status: 'published';
+    };
+    meta: {
+        resourceType: 'entity';
+        preview: true;
+    };
+};
+
 export type CreatePublicSubscriberData = {
     body?: {
         email: string;
@@ -582,7 +767,6 @@ export type CreatePublicSubscriberData = {
             [key: string]: string;
         };
         countryCode?: string;
-        skipDoubleOptin?: boolean;
     };
     path: {
         /**
@@ -627,6 +811,13 @@ export type GetPublicSiteData = {
     url: '/public/sites/{siteId}';
 };
 
+export type GetPublicSiteErrors = {
+    /**
+     * Site not found
+     */
+    404: unknown;
+};
+
 export type GetPublicSiteResponses = {
     /**
      * Site retrieved successfully
@@ -645,6 +836,7 @@ export type GetSubscriberListsData = {
         siteId: string;
     };
     query: {
+        email: string;
         token: string;
     };
     url: '/public/sites/{siteId}/subscribers/lists';
@@ -718,6 +910,7 @@ export type ConfirmPublicSubscriberResponse = ConfirmPublicSubscriberResponses[k
 
 export type UnsubscribeFromSpecificListsData = {
     body?: {
+        email: string;
         token: string;
         listIds: Array<string>;
     };
@@ -790,7 +983,24 @@ export type GetPublicEntitiesResponses = {
      * 200 OK
      */
     200: {
-        data: Array<PublicEntity & {
+        data: Array<{
+            id: string;
+            body?: TiptapSchema;
+            categories?: Array<PublicCategory>;
+            externalUrl?: string;
+            heroImage?: PublicImage;
+            images?: Array<PublicImage>;
+            name: string;
+            permalink: {
+                path: string;
+                site: {
+                    domain: string;
+                };
+            };
+            publishedAt: number;
+            slug: string;
+            status: 'published';
+        } & {
             permalink: {
                 path: string;
                 site: {
@@ -798,7 +1008,7 @@ export type GetPublicEntitiesResponses = {
                 };
             } | null;
         }>;
-        pagination: PaginationMeta;
+        pagination: PublicPaginationMeta;
     };
 };
 
@@ -831,7 +1041,7 @@ export type GetPublicArticlesResponses = {
      */
     200: {
         data: Array<PublicArticle>;
-        pagination: PaginationMeta;
+        pagination: PublicPaginationMeta;
     };
 };
 
@@ -863,7 +1073,39 @@ export type GetPublicCategoriesResponses = {
 
 export type GetPublicCategoriesResponse = GetPublicCategoriesResponses[keyof GetPublicCategoriesResponses];
 
-export type GetPublicEntityBySlugData = {
+export type GetPublicPageByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Site ID
+         */
+        siteId: string;
+        /**
+         * Page ID
+         */
+        id: string;
+    };
+    query?: never;
+    url: '/public/sites/{siteId}/pages/{id}';
+};
+
+export type GetPublicPageByIdErrors = {
+    /**
+     * 404 Not Found - Page not found
+     */
+    404: unknown;
+};
+
+export type GetPublicPageByIdResponses = {
+    /**
+     * Public page retrieved successfully
+     */
+    200: PublicPage;
+};
+
+export type GetPublicPageByIdResponse = GetPublicPageByIdResponses[keyof GetPublicPageByIdResponses];
+
+export type GetPublicPageBySlugData = {
     body?: never;
     path: {
         /**
@@ -873,6 +1115,135 @@ export type GetPublicEntityBySlugData = {
         slug: string;
     };
     query?: never;
+    url: '/public/sites/{siteId}/pages/slug/{slug}';
+};
+
+export type GetPublicPageBySlugErrors = {
+    /**
+     * 404 Not Found - Page not found
+     */
+    404: unknown;
+};
+
+export type GetPublicPageBySlugResponses = {
+    /**
+     * Public page retrieved successfully
+     */
+    200: PublicPage;
+};
+
+export type GetPublicPageBySlugResponse = GetPublicPageBySlugResponses[keyof GetPublicPageBySlugResponses];
+
+export type GetPermalinkByPathData = {
+    body?: never;
+    path: {
+        /**
+         * Site ID
+         */
+        siteId: string;
+    };
+    query: {
+        /**
+         * The permalink path
+         */
+        path: string;
+    };
+    url: '/public/sites/{siteId}/permalinks';
+};
+
+export type GetPermalinkByPathErrors = {
+    /**
+     * 404 Not Found - Permalink not found
+     */
+    404: unknown;
+};
+
+export type GetPermalinkByPathResponses = {
+    /**
+     * Permalink found
+     */
+    200: PermalinkLookupResponse;
+};
+
+export type GetPermalinkByPathResponse = GetPermalinkByPathResponses[keyof GetPermalinkByPathResponses];
+
+export type GetPublicEntityByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Site ID
+         */
+        siteId: string;
+        /**
+         * Entity ID
+         */
+        id: string;
+    };
+    query?: {
+        /**
+         * Set to "graph" to include resolved entity graph
+         */
+        include?: 'graph';
+        /**
+         * Graph traversal depth (default: 1, max: 3)
+         */
+        depth?: number;
+    };
+    url: '/public/sites/{siteId}/entities/{id}';
+};
+
+export type GetPublicEntityByIdErrors = {
+    /**
+     * 404 Not Found - Entity not found
+     */
+    404: unknown;
+};
+
+export type GetPublicEntityByIdResponses = {
+    /**
+     * Public entity retrieved successfully
+     */
+    200: {
+        id: string;
+        body?: TiptapSchema;
+        categories?: Array<PublicCategory>;
+        externalUrl?: string;
+        heroImage?: PublicImage;
+        images?: Array<PublicImage>;
+        name: string;
+        permalink: {
+            path: string;
+            site: {
+                domain: string;
+            };
+        };
+        publishedAt: number;
+        slug: string;
+        status: 'published';
+    };
+};
+
+export type GetPublicEntityByIdResponse = GetPublicEntityByIdResponses[keyof GetPublicEntityByIdResponses];
+
+export type GetPublicEntityBySlugData = {
+    body?: never;
+    path: {
+        /**
+         * Site ID
+         */
+        siteId: string;
+        slug: string;
+    };
+    query?: {
+        /**
+         * Set to "graph" to include resolved entity graph
+         */
+        include?: 'graph';
+        /**
+         * Graph traversal depth (default: 1, max: 3)
+         */
+        depth?: number;
+    };
     url: '/public/sites/{siteId}/entities/slug/{slug}';
 };
 
@@ -891,10 +1262,68 @@ export type GetPublicEntityBySlugResponses = {
     /**
      * Public entity retrieved successfully
      */
-    200: PublicEntity;
+    200: {
+        id: string;
+        body?: TiptapSchema;
+        categories?: Array<PublicCategory>;
+        externalUrl?: string;
+        heroImage?: PublicImage;
+        images?: Array<PublicImage>;
+        name: string;
+        permalink: {
+            path: string;
+            site: {
+                domain: string;
+            };
+        };
+        publishedAt: number;
+        slug: string;
+        status: 'published';
+    };
 };
 
 export type GetPublicEntityBySlugResponse = GetPublicEntityBySlugResponses[keyof GetPublicEntityBySlugResponses];
+
+export type GetPublicArticleByIdData = {
+    body?: never;
+    path: {
+        /**
+         * Site ID
+         */
+        siteId: string;
+        /**
+         * Article ID
+         */
+        id: string;
+    };
+    query?: {
+        /**
+         * Set to "graph" to include resolved entity graph
+         */
+        include?: 'graph';
+        /**
+         * Graph traversal depth (default: 1, max: 3)
+         */
+        depth?: number;
+    };
+    url: '/public/sites/{siteId}/articles/{id}';
+};
+
+export type GetPublicArticleByIdErrors = {
+    /**
+     * 404 Not Found - Article not found
+     */
+    404: unknown;
+};
+
+export type GetPublicArticleByIdResponses = {
+    /**
+     * Public article retrieved successfully
+     */
+    200: PublicArticle;
+};
+
+export type GetPublicArticleByIdResponse = GetPublicArticleByIdResponses[keyof GetPublicArticleByIdResponses];
 
 export type GetPublicArticleBySlugData = {
     body?: never;
@@ -905,7 +1334,16 @@ export type GetPublicArticleBySlugData = {
         siteId: string;
         slug: string;
     };
-    query?: never;
+    query?: {
+        /**
+         * Set to "graph" to include resolved entity graph
+         */
+        include?: 'graph';
+        /**
+         * Graph traversal depth (default: 1, max: 3)
+         */
+        depth?: number;
+    };
     url: '/public/sites/{siteId}/articles/slug/{slug}';
 };
 
@@ -942,6 +1380,14 @@ export type ResolvePublicPermalinkData = {
          * The permalink path to resolve
          */
         path: string;
+        /**
+         * Set to "graph" to include resolved entity graph
+         */
+        include?: 'graph';
+        /**
+         * Graph traversal depth (default: 1, max: 3)
+         */
+        depth?: number;
     };
     url: '/public/sites/{siteId}/permalinks/path';
 };
@@ -959,9 +1405,58 @@ export type ResolvePublicPermalinkErrors = {
 
 export type ResolvePublicPermalinkResponses = {
     /**
-     * 200 OK - Resource found
+     * 200 OK - Resource found.
      */
     200: PermalinkResolveResponse;
 };
 
 export type ResolvePublicPermalinkResponse = ResolvePublicPermalinkResponses[keyof ResolvePublicPermalinkResponses];
+
+export type PreviewResourceData = {
+    body?: never;
+    path: {
+        /**
+         * The site ID
+         */
+        siteId: string;
+        /**
+         * The preview token
+         */
+        token: string;
+    };
+    query?: {
+        /**
+         * Set to "graph" to include resolved entity graph
+         */
+        include?: 'graph';
+        /**
+         * Graph traversal depth (default: 1, max: 3)
+         */
+        depth?: number;
+    };
+    url: '/public/sites/{siteId}/preview/{token}';
+};
+
+export type PreviewResourceErrors = {
+    /**
+     * 403 Forbidden - Token does not match site
+     */
+    403: unknown;
+    /**
+     * 404 Not Found - Token or resource not found
+     */
+    404: unknown;
+    /**
+     * 410 Gone - Preview token has expired
+     */
+    410: unknown;
+};
+
+export type PreviewResourceResponses = {
+    /**
+     * 200 OK - Resource found.
+     */
+    200: PreviewResponse;
+};
+
+export type PreviewResourceResponse = PreviewResourceResponses[keyof PreviewResourceResponses];
