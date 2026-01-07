@@ -9,9 +9,11 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.6",
     "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/tailwind": "^6.0.2",
-    "astro": "^5.15.4"
+    "astro": "^5.15.4",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@hey-api/openapi-ts": "^0.88.0",
