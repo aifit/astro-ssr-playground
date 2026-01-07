@@ -59,7 +59,7 @@ const articles = response.data?.data || [];
 
 ## Maintenance Notes
 
-Since Minima is "still in development and SDK changes frequently":
+Since the Minima SDK is auto-generated and strictly typed:
 
 1.  **If the API changes**: Run the openapi-ts generator to update `src/sdk`.
 2.  **If the SDK methods change**: Update `src/lib/minima.ts` to fallback or adapt to the new signatures.

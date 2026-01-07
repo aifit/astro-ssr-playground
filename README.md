@@ -70,3 +70,20 @@ Configuration is in `openapi-ts.config.ts`:
 - **Output**: `src/sdk/`
 
 For more information, see [Minima API Documentation](https://docs.minima.ltd/developers/openapi).
+
+## AI Context
+
+Detailed documentation is maintained in `/docs/project-context.md` specifically created for AI assistants to understand this project's architecture and SDK integration.
+
+### Example: Maintenance Prompt
+
+When updating the SDK, copy-paste this prompt to your AI assistant:
+
+```
+Read `/docs/project-context.md` to understand the Minima SDK integration. Then:
+1. Regenerate the SDK client to fetch the latest types.
+2. Check if `/src/lib/minima.ts` or `/src/pages/sdk-explorer.astro` needs updates.
+3. **Crucial:** Run a full project type check (or scan usages) to identify and fix any breaking type errors in all `.astro` and `.ts` files caused by the SDK update.
+```
+
+You can see a demo of this prompt in action in the following pull request: [PR #11](https://github.com/aifit/astro-ssr-playground/pull/11)
