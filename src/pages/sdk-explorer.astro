@@ -48,9 +48,17 @@ const categoriesResponse = await getPublicCategories({
 
 // 5. Get Public Article By Slug (if available)
 let articleBySlugResponse = null;
+let articleWithGraphResponse = null;
+
 if (firstArticle?.slug) {
   articleBySlugResponse = await getPublicArticleBySlug({
     path: { siteId, slug: firstArticle.slug },
+  });
+
+  // 5b. Get Public Article By Slug (With Graph)
+  articleWithGraphResponse = await getPublicArticleBySlug({
+    path: { siteId, slug: firstArticle.slug },
+    query: { include: "graph", depth: 1 },
   });
 }
 
@@ -101,6 +109,12 @@ const results = [
     name: `getPublicArticleBySlug (${firstArticle?.slug || "N/A"})`,
     data: articleBySlugResponse?.data,
     description: "Get a public article by its slug.",
+  },
+  {
+    id: "getPublicArticleBySlugGraph",
+    name: `getPublicArticleBySlug + Graph`,
+    data: articleWithGraphResponse?.data,
+    description: "Get article with resolved entity graph.",
   },
   {
     id: "getPublicEntityBySlug",

@@ -9,7 +9,10 @@ import { getProjectUrl } from "../../lib/url";
 
 const { slug } = Astro.params;
 
-const response = await minima.getPublicEntityBySlug(slug!);
+const response = await minima.getPublicEntityBySlug(slug!, {
+  include: "graph",
+  depth: 1,
+});
 const project = response.data as GraphEntity | undefined;
 
 if (!project) {
