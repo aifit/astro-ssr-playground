@@ -48,7 +48,6 @@ const categoriesResponse = await getPublicCategories({
 
 // 5. Get Public Article By Slug (if available)
 let articleBySlugResponse = null;
-let articleWithGraphResponse = null;
 
 if (firstArticle?.slug) {
   articleBySlugResponse = await getPublicArticleBySlug({
