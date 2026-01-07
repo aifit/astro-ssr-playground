@@ -64,3 +64,4 @@ Since Minima is "still in development and SDK changes frequently":
 1.  **If the API changes**: Run the openapi-ts generator to update `src/sdk`.
 2.  **If the SDK methods change**: Update `src/lib/minima.ts` to fallback or adapt to the new signatures.
 3.  **Type Safety**: Rely on `src/sdk/types.gen.ts` for response types.
+4.  **SDK Explorer**: Update `src/pages/sdk-explorer.astro` if there are breaking changes to SDK methods, as it uses them directly for demonstration.
