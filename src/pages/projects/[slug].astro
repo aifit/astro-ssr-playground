@@ -13,7 +13,11 @@ const response = await minima.getPublicEntityBySlug(slug!, {
   include: "graph",
   depth: 1,
 });
-const project = response.data as GraphEntity | undefined;
+
+// Cast to GraphEntity: GetPublicEntityBySlugResponses missing attributes & graph types
+const project = response.data as GraphEntity & {
+  graph?: GraphEntity[];
+};
 
 if (!project) {
   return Astro.redirect("/404");
