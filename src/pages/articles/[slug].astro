@@ -12,7 +12,10 @@ import { buildTitle } from "../../config/site";
 const slug = Astro.params.slug as string;
 
 // Fetch article by slug
-const response = await minima.getPublicArticleBySlug(slug!);
+const response = await minima.getPublicArticleBySlug(slug!, {
+  include: "graph",
+  depth: 1,
+});
 const article = response.data;
 
 if (!article) {
