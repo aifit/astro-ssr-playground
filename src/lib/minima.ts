@@ -4,6 +4,9 @@ import type {
   GetPublicArticlesData,
   GetPublicEntitiesData,
   GetPublicCategoriesData,
+  GetPublicArticleBySlugData,
+  GetPublicEntityBySlugData,
+  ResolvePublicPermalinkData,
 } from "../sdk/types.gen";
 
 const apiKey = import.meta.env.PUBLIC_MINIMA_API_KEY;
@@ -34,8 +37,14 @@ export const minima = {
       },
     }),
 
-  getPublicArticleBySlug: (slug: string) =>
-    sdk.getPublicArticleBySlug({ path: { siteId, slug } }),
+  getPublicArticleBySlug: (
+    slug: string,
+    options?: Omit<GetPublicArticleBySlugData["query"], "slug">
+  ) =>
+    sdk.getPublicArticleBySlug({
+      path: { siteId, slug },
+      query: options,
+    }),
 
   getPublicEntities: (options?: GetPublicEntitiesData["query"]) =>
     sdk.getPublicEntities({
@@ -53,8 +62,14 @@ export const minima = {
       },
     }),
 
-  getPublicEntityBySlug: (slug: string) =>
-    sdk.getPublicEntityBySlug({ path: { siteId, slug } }),
+  getPublicEntityBySlug: (
+    slug: string,
+    options?: Omit<GetPublicEntityBySlugData["query"], "slug">
+  ) =>
+    sdk.getPublicEntityBySlug({
+      path: { siteId, slug },
+      query: options,
+    }),
 
   getPublicCategories: (options?: GetPublicCategoriesData["query"]) =>
     sdk.getPublicCategories({
@@ -65,10 +80,13 @@ export const minima = {
       },
     }),
 
-  resolvePublicPermalink: (path: string) =>
+  resolvePublicPermalink: (
+    path: string,
+    options?: Omit<ResolvePublicPermalinkData["query"], "path">
+  ) =>
     sdk.resolvePublicPermalink({
       path: { siteId },
-      query: { path },
+      query: { path, ...options },
     }),
 };
 

@@ -9,8 +9,15 @@ import { getProjectUrl } from "../../lib/url";
 
 const { slug } = Astro.params;
 
-const response = await minima.getPublicEntityBySlug(slug!);
-const project = response.data as GraphEntity | undefined;
+const response = await minima.getPublicEntityBySlug(slug!, {
+  include: "graph",
+  depth: 1,
+});
+
+// Cast to GraphEntity: GetPublicEntityBySlugResponses missing attributes & graph types
+const project = response.data as GraphEntity & {
+  graph?: GraphEntity[];
+};
 
 if (!project) {
   return Astro.redirect("/404");
